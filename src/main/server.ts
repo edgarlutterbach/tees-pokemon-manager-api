@@ -17,7 +17,7 @@ interface Pokemon {
     hp: number;
 }
 
-const pokemons: Pokemon[] = [
+let pokemons: Pokemon[] = [
   { id: '1', name: 'Bulbasaur', type: 'Grass', hp: 45 },
   { id: '4', name: 'Charmander', type: 'Fire', hp: 39 },
   { id: '7', name: 'Squirtle', type: 'Water', hp: 44 },
@@ -78,6 +78,27 @@ app.post('/api/v1/pokemons', (req: Request, res: Response) => {
     return res.status(201).json({
         message: 'Pokémon cadastrado com sucesso!',
         data: newPokemon
+    });
+});
+
+//? Remover um pokémon pelo ID
+
+app.delete('/api/v1/pokemons/:id', (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const pokemon = pokemons.find(
+        (p) => p.id === id
+    );
+
+    if(!pokemon) {
+        return res.status(404).json({ error: 'Pokémon não encontrado no catálogo.' })
+    }
+
+    pokemons = pokemons.filter((p) => p.id !== id);
+    
+    return res.status(200).json({
+        message: 'Pokémon excluído com sucesso!',
+        data: pokemons
     });
 });
 
