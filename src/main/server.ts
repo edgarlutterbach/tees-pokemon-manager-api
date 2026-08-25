@@ -23,6 +23,22 @@ let pokemons: Pokemon[] = [
   { id: '7', name: 'Squirtle', type: 'Water', hp: 44 },
 ];
 
+//? Rota de estatísticas gerais da API (Status 200 OK)
+
+app.get('/api/v1/pokemons/stats', (req: Request, res: Response) => {
+    const totalPokemons = pokemons.length;
+
+    const typesCount = pokemons.reduce((acumulador, pokemon) => {
+        acumulador[pokemon.type] = (acumulador[pokemon.type] ?? 0) + 1;
+        return acumulador;
+    }, {} as Record<string, number>);
+
+    return res.status(200).json({
+        totalPokemons,
+        typesCount
+    });
+});
+
 //? Lista todos os pokémons cadastrados e aplicar filtros (Status 200 OK)
 
 app.get('/api/v1/pokemons', (req: Request, res: Response) => {
@@ -81,7 +97,7 @@ app.post('/api/v1/pokemons', (req: Request, res: Response) => {
     });
 });
 
-//? Remover um pokémon pelo ID
+//? Remover um pokémon pelo ID (Status 200 OK ou 400 Bad Request)
 
 app.delete('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     const { id } = req.params;
@@ -102,7 +118,8 @@ app.delete('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     });
 });
 
-//? Atualizar um pokémon pelo ID
+//? Atualizar um pokémon pelo ID (Status 200 OK ou 400 Bad Request)
+
 app.put('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     const { id } = req.params;
     const { name, type, hp } = req.body;
@@ -126,8 +143,6 @@ app.put('/api/v1/pokemons/:id', (req: Request, res: Response) => {
         data: pokemonAtualizado
     });
 });
-
-
 
 const PORT = 3333;
 
