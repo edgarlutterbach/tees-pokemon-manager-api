@@ -102,6 +102,33 @@ app.delete('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     });
 });
 
+//? Atualizar um pokémon pelo ID
+app.put('/api/v1/pokemons/:id', (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { name, type, hp } = req.body;
+
+    const pokemon = pokemons.find(
+        (p) => p.id === id
+    );
+
+    if(!pokemon) {
+        return res.status(404).json({ error: 'Pokémon não encontrado no catálogo.' })
+    }
+
+    pokemons = pokemons.map((p) =>
+        p.id == id ? { ...p, name: name ?? p.name, type: type ?? p.type, hp: hp !== undefined ? Number(hp) : p.hp} : p
+    );
+
+    const pokemonAtualizado = pokemons.find((p) => p.id === id);
+
+    return res.status(200).json({
+        message: 'Pokémon editado com sucesso!',
+        data: pokemonAtualizado
+    });
+});
+
+
+
 const PORT = 3333;
 
 app.listen(PORT, () => {
