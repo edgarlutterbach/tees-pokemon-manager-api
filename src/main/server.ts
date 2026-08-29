@@ -8,22 +8,66 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     next();
 });
 
-app.use(express.json())
+app.use(express.json());
 
-interface Pokemon {
-    id: string;
-    name: string;
-    type: string;
+// Enum
+
+enum PokemonType {
+   FIRE = "FIRE",
+   GRASS = "GRASS",
+   WATER = "WATER",
+   ELECTRIC = "ELECTRIC",
+   PSYCHIC = "PSYCHIC",
+}
+
+enum PokemonRarity {
+    COMMON = "COMMON",
+    RARE = "RARE",
+    LEGENDARY = "LEGENDARY",
+}
+
+
+// Interfaces
+
+interface PokemonBattleStats {
+    attack: number;
+    defense: number;
     hp: number;
 }
 
+interface Pokemon extends PokemonBattleStats {
+    id: string;
+    name: string;
+    type: PokemonType;
+    rarity: PokemonRarity;
+    nickname?: string;
+}
+
 let pokemons: Pokemon[] = [
-  { id: '1', name: 'Bulbasaur', type: 'Grass', hp: 45 },
-  { id: '4', name: 'Charmander', type: 'Fire', hp: 39 },
-  { id: '7', name: 'Squirtle', type: 'Water', hp: 44 },
+  { id: '1', name: 'Bulbasaur', type: PokemonType.GRASS, rarity: PokemonRarity.COMMON, hp: 45, attack: 49, defense: 55 },
+  { id: '4', name: 'Charmander', type: PokemonType.FIRE, rarity: PokemonRarity.COMMON, hp: 39, attack: 53, defense: 52 },
+  { id: '7', name: 'Squirtle', type: PokemonType.WATER, rarity: PokemonRarity.COMMON, hp: 44, attack: 45, defense: 59 },
+  { id: '5', name: 'Charmeleon', type: PokemonType.FIRE, rarity: PokemonRarity.COMMON, hp: 96, attack: 90, defense: 88 },
+  { id: '50', name: 'Lugia', type: PokemonType.PSYCHIC, rarity: PokemonRarity.LEGENDARY, nickname: 'First one', hp: 203, attack: 159, defense: 103},
 ];
 
-//? Rota de estatísticas gerais da API (Status 200 OK)
+// domain/services
+
+type AttackerStats = Pick<Pokemon, 'attack'>;
+type DefenderStats = Pick<Pokemon, 'defense' | 'hp'>;
+
+const MIN_DAMAGE = 0;
+
+function calculatePokemonDamage(attacker: AttackerStats, defender: DefenderStats): string{
+    const baseDamage = Math.max(MIN_DAMAGE, attacker.attack - defender.defense)
+    const totalHpRemaining = Math.max(0, defender.hp - baseDamage);
+
+    return "HP restante: " + totalHpRemaining;
+}
+
+// application/use-cases
+
+// Rota de estatísticas gerais da API (Status 200 OK)
 
 app.get('/api/v1/pokemons/stats', (req: Request, res: Response) => {
     const totalPokemons = pokemons.length;
@@ -31,7 +75,7 @@ app.get('/api/v1/pokemons/stats', (req: Request, res: Response) => {
     const typesCount = pokemons.reduce((acumulador, pokemon) => {
         acumulador[pokemon.type] = (acumulador[pokemon.type] ?? 0) + 1;
         return acumulador;
-    }, {} as Record<string, number>);
+    }, {} as Record<PokemonType, number>);
 
     return res.status(200).json({
         totalPokemons,
@@ -39,7 +83,7 @@ app.get('/api/v1/pokemons/stats', (req: Request, res: Response) => {
     });
 });
 
-//? Lista todos os pokémons cadastrados e aplicar filtros (Status 200 OK)
+// Lista todos os pokémons cadastrados e aplicar filtros (Status 200 OK)
 
 app.get('/api/v1/pokemons', (req: Request, res: Response) => {
     const { type } = req.query;
@@ -56,7 +100,7 @@ app.get('/api/v1/pokemons', (req: Request, res: Response) => {
 });
 
 
-//? Busca um pokémon pelo ID (Status 200 OK ou 404 Not Found)
+// Busca um pokémon pelo ID (Status 200 OK ou 404 Not Found)
 
 app.get('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     const { id } = req.params;
@@ -72,13 +116,21 @@ app.get('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     return res.status(200).json(pokemon);
 });
 
-//? Cadastra um novo pokémon (Status 201 Created ou 400 Bad Request)
+// Cadastra um novo pokémon (Status 201 Created ou 400 Bad Request)
 
 app.post('/api/v1/pokemons', (req: Request, res: Response) => {
-    const { id, name, type, hp } = req.body;
+    const { id, name, type, rarity, nickname, hp, attack, defense } = req.body;
 
-    if(!id || !name || !type || !hp) {
-        return res.status(400).json({ error: 'Campos obrigatórios ausentes: id, name, type e hp são necessários.' });
+    if(!id || !name || !type || !rarity || !hp || !attack || !defense) {
+        return res.status(400).json({ error: 'Campos obrigatórios ausentes: id, name, type, rarity, hp, attack e defense são necessários.' });
+    }
+
+    if(!Object.values(PokemonType).includes(type.toUpperCase() as PokemonType)) {
+        return res.status(400).json({ error: 'Tipo de pokémon informado inválido!' })
+    }
+
+    if(!Object.values(PokemonRarity).includes(rarity.toUpperCase() as PokemonRarity)) {
+        return res.status(400).json({ error: 'Raridade de pokémon informado inválida!' })
     }
 
     const pokemonExists = pokemons.some(
@@ -88,7 +140,18 @@ app.post('/api/v1/pokemons', (req: Request, res: Response) => {
         return res.status(400).json({ error: 'Pokémon com este ID já existe.' });
     }
 
-    const newPokemon: Pokemon = {id, name, type, hp: Number(hp)};
+    // Verificar como transformar o type para uppercase e passar no construtor
+
+    const newPokemon: Pokemon = {
+        id,
+        name,
+        type,
+        rarity,
+        nickname,
+        hp: Number(hp),
+        attack: Number(attack),
+        defense: Number(defense)
+    };
     pokemons.push(newPokemon);
 
     return res.status(201).json({
@@ -97,7 +160,7 @@ app.post('/api/v1/pokemons', (req: Request, res: Response) => {
     });
 });
 
-//? Remover um pokémon pelo ID (Status 200 OK ou 400 Bad Request)
+// Remover um pokémon pelo ID (Status 200 OK ou 400 Bad Request)
 
 app.delete('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     const { id } = req.params;
@@ -118,11 +181,11 @@ app.delete('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     });
 });
 
-//? Atualizar um pokémon pelo ID (Status 200 OK ou 400 Bad Request)
+// Atualizar um pokémon pelo ID (Status 200 OK ou 400 Bad Request)
 
 app.put('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, type, hp } = req.body;
+    const { name, type, rarity, nickname, hp, attack, defense } = req.body;
 
     const pokemon = pokemons.find(
         (p) => p.id === id
@@ -133,7 +196,15 @@ app.put('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     }
 
     pokemons = pokemons.map((p) =>
-        p.id == id ? { ...p, name: name ?? p.name, type: type ?? p.type, hp: hp !== undefined ? Number(hp) : p.hp} : p
+        p.id == id ? { ...p,
+            name: name ?? p.name,
+            type: type ?? p.type,
+            rarity: rarity ?? p.rarity,
+            nickname: nickname ?? p.nickname,
+            hp: hp !== undefined ? Number(hp) : p.hp,
+            attack: attack !== undefined ? Number(attack) : p.attack,
+            defense: defense !== undefined ? Number(defense) : p.defense
+        } : p
     );
 
     const pokemonAtualizado = pokemons.find((p) => p.id === id);
