@@ -125,11 +125,14 @@ app.post('/api/v1/pokemons', (req: Request, res: Response) => {
         return res.status(400).json({ error: 'Campos obrigatórios ausentes: id, name, type, rarity, hp, attack e defense são necessários.' });
     }
 
-    if(!Object.values(PokemonType).includes(type.toUpperCase() as PokemonType)) {
+    const normalizedType = type.toUpperCase()
+    const normalizedRarity = rarity.toUpperCase()
+
+    if(!Object.values(PokemonType).includes(normalizedType as PokemonType)) {
         return res.status(400).json({ error: 'Tipo de pokémon informado inválido!' })
     }
 
-    if(!Object.values(PokemonRarity).includes(rarity.toUpperCase() as PokemonRarity)) {
+    if(!Object.values(PokemonRarity).includes(normalizedRarity as PokemonRarity)) {
         return res.status(400).json({ error: 'Raridade de pokémon informado inválida!' })
     }
 
@@ -145,8 +148,8 @@ app.post('/api/v1/pokemons', (req: Request, res: Response) => {
     const newPokemon: Pokemon = {
         id,
         name,
-        type,
-        rarity,
+        type: normalizedType as PokemonType,
+        rarity: normalizedRarity as PokemonRarity,
         nickname,
         hp: Number(hp),
         attack: Number(attack),
@@ -195,11 +198,23 @@ app.put('/api/v1/pokemons/:id', (req: Request, res: Response) => {
         return res.status(404).json({ error: 'Pokémon não encontrado no catálogo.' })
     }
 
+    const normalizedType = type !== undefined ? type.toUpperCase() : undefined;
+    const normalizedRarity = rarity !== undefined ? rarity.toUpperCase() : undefined;
+
+    if(normalizedType !== undefined && !Object.values(PokemonType).includes(normalizedType as PokemonType)) {
+        return res.status(400).json({ error: 'Tipo de pokémon informado inválido!' })
+    }
+
+    if(normalizedRarity !== undefined && !Object.values(PokemonRarity).includes(normalizedRarity as PokemonRarity)) {
+        return res.status(400).json({ error: 'Raridade de pokémon informado inválida!' })
+    }
+
+
     pokemons = pokemons.map((p) =>
         p.id == id ? { ...p,
             name: name ?? p.name,
-            type: type ?? p.type,
-            rarity: rarity ?? p.rarity,
+            type: (normalizedType as PokemonType) ?? p.type,
+            rarity: (normalizedRarity as PokemonRarity) ?? p.rarity,
             nickname: nickname ?? p.nickname,
             hp: hp !== undefined ? Number(hp) : p.hp,
             attack: attack !== undefined ? Number(attack) : p.attack,
