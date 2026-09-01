@@ -43,6 +43,16 @@ interface Pokemon extends PokemonBattleStats {
     nickname?: string;
 }
 
+interface CreateTrainerDTO {
+    name: string;
+    age: number;
+    city: string;
+}
+
+interface TrainerParams {
+    trainerId: String;
+}
+
 let pokemons: Pokemon[] = [
   { id: '1', name: 'Bulbasaur', type: PokemonType.GRASS, rarity: PokemonRarity.COMMON, hp: 45, attack: 49, defense: 55 },
   { id: '4', name: 'Charmander', type: PokemonType.FIRE, rarity: PokemonRarity.COMMON, hp: 39, attack: 53, defense: 52 },
@@ -55,6 +65,7 @@ let pokemons: Pokemon[] = [
 
 type AttackerStats = Pick<Pokemon, 'attack'>;
 type DefenderStats = Pick<Pokemon, 'defense' | 'hp'>;
+type SearchIdentifier = string | number
 
 const MIN_DAMAGE = 0;
 
@@ -63,6 +74,16 @@ function calculatePokemonDamage(attacker: AttackerStats, defender: DefenderStats
     const totalHpRemaining = Math.max(0, defender.hp - baseDamage);
 
     return "HP restante: " + totalHpRemaining;
+}
+
+function findPokemonInCatalog(identifier: SearchIdentifier): Pokemon | undefined {
+    if(typeof identifier === 'number') {
+        console.log("Buscando por Pokedex ID: " + identifier);
+        return pokemons.find((p) => p.id === String(identifier));
+    }
+
+    console.log("Buscando por Nome: " + identifier);
+    return pokemons.find((p) => p.name.toLowerCase() === identifier.toLowerCase());
 }
 
 // application/use-cases
@@ -227,6 +248,27 @@ app.put('/api/v1/pokemons/:id', (req: Request, res: Response) => {
     return res.status(200).json({
         message: 'Pokémon editado com sucesso!',
         data: pokemonAtualizado
+    });
+});
+
+// Adicionar treinador (Status 201 Created ou 400 Bad Request)
+
+app.post('/api/v1/trainers', (req: Request<{}, {}, CreateTrainerDTO>, res: Response) => {
+    const { name, age, city } = req.body;
+
+    if(!name || !city || !age) {
+        return res.status(400).json({ error: 'Campos obrigatórios ausentes: name, age e city são necessários.' });
+    }
+
+    if(age <= 0) {
+        return res.status(400).json({ error: 'A idade deve ser um número positivo.' });
+    }
+
+    const newTrainer = { name, age, city };
+
+    return res.status(201).json({
+        message: 'Treinador cadastrado com sucesso!',
+        data: newTrainer,
     });
 });
 
