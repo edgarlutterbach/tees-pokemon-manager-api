@@ -35,7 +35,7 @@ interface PokemonBattleStats {
     hp: number;
 }
 
-interface Pokemon extends PokemonBattleStats {
+export interface Pokemon extends PokemonBattleStats {
     id: string;
     name: string;
     type: PokemonType;
