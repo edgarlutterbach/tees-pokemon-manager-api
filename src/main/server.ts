@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import { pokemonRoutes } from '../infrastructure/http/routes/pokemon-routes';
 
 const app = express();
 
@@ -104,38 +105,9 @@ app.get('/api/v1/pokemons/stats', (req: Request, res: Response) => {
     });
 });
 
-// Lista todos os pokémons cadastrados e aplicar filtros (Status 200 OK)
+// Lista todos os pokémons cadastrados e/ou aplicar filtros (Status 200 OK ou Status 404 Not Found ou Status 500 Internal Server Error)
 
-app.get('/api/v1/pokemons', (req: Request, res: Response) => {
-    const { type } = req.query;
-
-    if(type) {
-        const filteredPokemons = pokemons.filter(
-          (p) => p.type.toLowerCase() === String(type).toLowerCase()
-        );
-
-        return res.status(200).json(filteredPokemons);
-    }
-
-    return res.status(200).json(pokemons);
-});
-
-
-// Busca um pokémon pelo ID (Status 200 OK ou 404 Not Found)
-
-app.get('/api/v1/pokemons/:id', (req: Request, res: Response) => {
-    const { id } = req.params;
-
-    const pokemon = pokemons.find(
-        (p) => p.id === id
-    );
-
-    if(!pokemon) {
-        return res.status(404).json({ error: 'Pokémon não encontrado no catálogo.' })
-    }
-
-    return res.status(200).json(pokemon);
-});
+app.use('/api/v1/pokemons', pokemonRoutes);
 
 // Cadastra um novo pokémon (Status 201 Created ou 400 Bad Request)
 
