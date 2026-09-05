@@ -105,56 +105,7 @@ app.get('/api/v1/pokemons/stats', (req: Request, res: Response) => {
     });
 });
 
-// Lista todos os pokémons cadastrados e/ou aplicar filtros (Status 200 OK ou Status 404 Not Found ou Status 500 Internal Server Error)
-
 app.use('/api/v1/pokemons', pokemonRoutes);
-
-// Cadastra um novo pokémon (Status 201 Created ou 400 Bad Request)
-
-app.post('/api/v1/pokemons', (req: Request, res: Response) => {
-    const { id, name, type, rarity, nickname, hp, attack, defense } = req.body;
-
-    if(!id || !name || !type || !rarity || !hp || !attack || !defense) {
-        return res.status(400).json({ error: 'Campos obrigatórios ausentes: id, name, type, rarity, hp, attack e defense são necessários.' });
-    }
-
-    const normalizedType = type.toUpperCase()
-    const normalizedRarity = rarity.toUpperCase()
-
-    if(!Object.values(PokemonType).includes(normalizedType as PokemonType)) {
-        return res.status(400).json({ error: 'Tipo de pokémon informado inválido!' })
-    }
-
-    if(!Object.values(PokemonRarity).includes(normalizedRarity as PokemonRarity)) {
-        return res.status(400).json({ error: 'Raridade de pokémon informado inválida!' })
-    }
-
-    const pokemonExists = pokemons.some(
-        (p) => p.id === id
-    );
-    if(pokemonExists) {
-        return res.status(400).json({ error: 'Pokémon com este ID já existe.' });
-    }
-
-    // Verificar como transformar o type para uppercase e passar no construtor
-
-    const newPokemon: Pokemon = {
-        id,
-        name,
-        type: normalizedType as PokemonType,
-        rarity: normalizedRarity as PokemonRarity,
-        nickname,
-        hp: Number(hp),
-        attack: Number(attack),
-        defense: Number(defense)
-    };
-    pokemons.push(newPokemon);
-
-    return res.status(201).json({
-        message: 'Pokémon cadastrado com sucesso!',
-        data: newPokemon
-    });
-});
 
 // Remover um pokémon pelo ID (Status 200 OK ou 400 Bad Request)
 

@@ -8,7 +8,7 @@ export class InMemoryPokemonRepository implements PokemonRepositoryContract {
         this.pokemons = pokemons;
     }
 
-    async save(pokemon: Pokemon): Promise<void> {
+    async create(pokemon: Pokemon): Promise<void> {
         this.pokemons.push(pokemon);
     }
 
