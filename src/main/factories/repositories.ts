@@ -1,4 +1,5 @@
 import { InMemoryPokemonRepository } from '../../infrastructure/database/in-memory-pokemon-repository';
+import { InMemoryTrainerRepository } from '../../infrastructure/database/in-memory-trainer-repository';
 import { Pokemon } from '../../domain/entities/pokemon';
 import { PokemonType } from '../../domain/entities/pokemon-type';
 import { PokemonRarity } from '../../domain/entities/pokemon-rarity';
@@ -13,4 +14,6 @@ pokemonRepository.seed([
     new Pokemon({ id: '50', name: 'Lugia', type: PokemonType.PSYCHIC, rarity: PokemonRarity.LEGENDARY, nickname: 'First one', hp: 203, attack: 159, defense: 103 }),
 ]);
 
-export { pokemonRepository };
+const trainerRepository = new InMemoryTrainerRepository();
+
+export { pokemonRepository, trainerRepository };

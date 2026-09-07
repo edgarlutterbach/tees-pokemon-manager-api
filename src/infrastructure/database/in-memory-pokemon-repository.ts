@@ -26,4 +26,16 @@ export class InMemoryPokemonRepository implements PokemonRepositoryContract {
             (p) => p.type.toLowerCase() === type.toLowerCase()
         );
     }
+
+    async update(pokemon: Pokemon): Promise<void> {
+        const index = this.pokemons.findIndex((p) => p.id === pokemon.id);
+
+        if (index !== -1) {
+            this.pokemons[index] = pokemon;
+        }
+    }
+
+    async delete(id: string): Promise<void> {
+        this.pokemons = this.pokemons.filter((p) => p.id !== id);
+    }
 }
