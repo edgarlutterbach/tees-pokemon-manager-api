@@ -1,8 +1,8 @@
-import { TrainerRepositoryContract } from '../../domain/repositories/trainer-repository-contract';
-import { Trainer } from '../../domain/entities/trainer';
+import { TrainerRepositoryContract } from '@domain/repositories/trainer-repository-contract';
+import { Trainer } from '@domain/entities/trainer';
 import { CreateTrainerDTO } from '../dtos/create-trainer-dto';
-import { DomainError } from '../../domain/errors/domain-error';
-import { ErrorCode } from '../../domain/errors/error-code';
+import { DomainError } from '@domain/errors/domain-error';
+import { ErrorCode } from '@domain/errors/error-code';
 
 export class CreateTrainerUseCase {
   private repository: TrainerRepositoryContract;

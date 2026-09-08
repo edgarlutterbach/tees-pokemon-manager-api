@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { pokemonRoutes } from '../infrastructure/http/routes/pokemon-routes';
-import { trainerRoutes } from '../infrastructure/http/routes/trainer-routes';
+import { pokemonRoutes } from '@infrastructure/http/routes/pokemon-routes';
+import { trainerRoutes } from '@infrastructure/http/routes/trainer-routes';
 import { swaggerUi, swaggerDocument } from './config/swagger';
 
 const app = express();

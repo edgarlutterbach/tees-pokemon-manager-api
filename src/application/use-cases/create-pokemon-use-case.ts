@@ -1,7 +1,7 @@
-import { PokemonRepositoryContract } from '../../domain/repositories/pokemon-repository-contract';
-import { CreatePokemonDTO } from '../../application/dtos/create-pokemon-dto';
-import { Pokemon } from '../../domain/entities/pokemon';
-import { DuplicateResourceError } from '../../domain/errors/duplicate-resource-error';
+import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
+import { CreatePokemonDTO } from '@application/dtos/create-pokemon-dto';
+import { Pokemon } from '@domain/entities/pokemon';
+import { DuplicateResourceError } from '@domain/errors/duplicate-resource-error';
 
 export class CreatePokemonUseCase {
   private repository: PokemonRepositoryContract;

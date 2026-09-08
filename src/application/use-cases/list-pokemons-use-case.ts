@@ -1,5 +1,5 @@
-import { Pokemon } from '../../domain/entities/pokemon';
-import { PokemonRepositoryContract } from '../../domain/repositories/pokemon-repository-contract';
+import { Pokemon } from '@domain/entities/pokemon';
+import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
 
 export class ListPokemonsUseCase {
   private repository: PokemonRepositoryContract;

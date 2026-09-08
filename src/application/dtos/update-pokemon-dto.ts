@@ -1,5 +1,5 @@
-import { PokemonType } from '../../domain/entities/pokemon-type';
-import { PokemonRarity } from '../../domain/entities/pokemon-rarity';
+import { PokemonType } from '@domain/entities/pokemon-type';
+import { PokemonRarity } from '@domain/entities/pokemon-rarity';
 
 export interface UpdatePokemonDTO {
   name?: string;

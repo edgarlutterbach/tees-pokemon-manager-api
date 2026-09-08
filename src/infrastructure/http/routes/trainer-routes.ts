@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { makeTrainerController } from '../../../main/factories/make-trainer-controller';
+import { makeTrainerController } from '@main/factories/make-trainer-controller';
 
 const router = Router();
 const controller = makeTrainerController();

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { CreateTrainerUseCase } from '../../../application/use-cases/create-trainer-use-case';
-import { CreateTrainerDTO } from '../../../application/dtos/create-trainer-dto';
-import { DomainError } from '../../../domain/errors/domain-error';
-import { ErrorCode } from '../../../domain/errors/error-code';
+import { CreateTrainerUseCase } from '@application/use-cases/create-trainer-use-case';
+import { CreateTrainerDTO } from '@application/dtos/create-trainer-dto';
+import { DomainError } from '@domain/errors/domain-error';
+import { ErrorCode } from '@domain/errors/error-code';
 
 export class TrainerController {
   private createUseCase: CreateTrainerUseCase;

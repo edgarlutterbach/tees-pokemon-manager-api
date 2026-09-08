@@ -1,8 +1,8 @@
-import { InMemoryPokemonRepository } from '../../infrastructure/database/in-memory-pokemon-repository';
-import { InMemoryTrainerRepository } from '../../infrastructure/database/in-memory-trainer-repository';
-import { Pokemon } from '../../domain/entities/pokemon';
-import { PokemonType } from '../../domain/entities/pokemon-type';
-import { PokemonRarity } from '../../domain/entities/pokemon-rarity';
+import { InMemoryPokemonRepository } from '@infrastructure/database/in-memory-pokemon-repository';
+import { InMemoryTrainerRepository } from '@infrastructure/database/in-memory-trainer-repository';
+import { Pokemon } from '@domain/entities/pokemon';
+import { PokemonType } from '@domain/entities/pokemon-type';
+import { PokemonRarity } from '@domain/entities/pokemon-rarity';
 
 const pokemonRepository = new InMemoryPokemonRepository();
 

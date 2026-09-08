@@ -1,4 +1,4 @@
-import { PokemonRepositoryContract } from '../../domain/repositories/pokemon-repository-contract';
+import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
 
 interface PokemonStats {
   totalPokemons: number;

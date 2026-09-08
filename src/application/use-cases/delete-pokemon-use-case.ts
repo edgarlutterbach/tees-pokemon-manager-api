@@ -1,5 +1,5 @@
-import { PokemonRepositoryContract } from '../../domain/repositories/pokemon-repository-contract';
-import { ResourceNotFoundError } from '../../domain/errors/resource-not-found-error';
+import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
+import { ResourceNotFoundError } from '@domain/errors/resource-not-found-error';
 
 export class DeletePokemonUseCase {
   private repository: PokemonRepositoryContract;

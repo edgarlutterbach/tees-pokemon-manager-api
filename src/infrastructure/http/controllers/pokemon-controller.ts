@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { ListPokemonsUseCase } from '../../../application/use-cases/list-pokemons-use-case';
-import { GetPokemonByIdUseCase } from '../../../application/use-cases/get-pokemon-by-id-use-case';
-import { CreatePokemonUseCase } from '../../../application/use-cases/create-pokemon-use-case';
-import { UpdatePokemonUseCase } from '../../../application/use-cases/update-pokemon-use-case';
-import { DeletePokemonUseCase } from '../../../application/use-cases/delete-pokemon-use-case';
-import { GetPokemonStatsUseCase } from '../../../application/use-cases/get-pokemon-stats-use-case';
-import { DomainError } from '../../../domain/errors/domain-error';
-import { ErrorCode } from '../../../domain/errors/error-code';
+import { ListPokemonsUseCase } from '@application/use-cases/list-pokemons-use-case';
+import { GetPokemonByIdUseCase } from '@application/use-cases/get-pokemon-by-id-use-case';
+import { CreatePokemonUseCase } from '@application/use-cases/create-pokemon-use-case';
+import { UpdatePokemonUseCase } from '@application/use-cases/update-pokemon-use-case';
+import { DeletePokemonUseCase } from '@application/use-cases/delete-pokemon-use-case';
+import { GetPokemonStatsUseCase } from '@application/use-cases/get-pokemon-stats-use-case';
+import { DomainError } from '@domain/errors/domain-error';
+import { ErrorCode } from '@domain/errors/error-code';
 
 export class PokemonController {
   private listUseCase: ListPokemonsUseCase;

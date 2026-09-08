@@ -1,7 +1,7 @@
-import { PokemonRepositoryContract } from '../../domain/repositories/pokemon-repository-contract';
-import { Pokemon } from '../../domain/entities/pokemon';
+import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
+import { Pokemon } from '@domain/entities/pokemon';
 import { UpdatePokemonDTO } from '../dtos/update-pokemon-dto';
-import { ResourceNotFoundError } from '../../domain/errors/resource-not-found-error';
+import { ResourceNotFoundError } from '@domain/errors/resource-not-found-error';
 
 export class UpdatePokemonUseCase {
   private repository: PokemonRepositoryContract;

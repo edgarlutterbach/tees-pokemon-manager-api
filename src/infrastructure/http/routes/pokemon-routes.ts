@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { makePokemonController } from '../../../main/factories/make-pokemon-controller';
+import { makePokemonController } from '@main/factories/make-pokemon-controller';
 
 const router = Router();
 const controller = makePokemonController();
