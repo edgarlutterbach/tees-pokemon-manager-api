@@ -7,7 +7,8 @@
     "swagger": "tsx src/main/config/swagger-generator.ts",
     "dev": "npm run swagger && tsx watch src/main/server.ts",
     "build": "npm run swagger && tsc",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix"
   },
   "keywords": [],
   "type": "commonjs",

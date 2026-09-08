@@ -1,29 +1,31 @@
 import { PokemonRepositoryContract } from '../../domain/repositories/pokemon-repository-contract';
-import { PokemonType } from '../../domain/entities/pokemon-type';
 
 interface PokemonStats {
-    totalPokemons: number;
-    typesCount: Record<string, number>;
+  totalPokemons: number;
+  typesCount: Record<string, number>;
 }
 
 export class GetPokemonStatsUseCase {
-    private repository: PokemonRepositoryContract;
+  private repository: PokemonRepositoryContract;
 
-    constructor(repository: PokemonRepositoryContract) {
-        this.repository = repository;
-    }
+  constructor(repository: PokemonRepositoryContract) {
+    this.repository = repository;
+  }
 
-    async execute(): Promise<PokemonStats> {
-        const pokemons = await this.repository.findAll();
+  async execute(): Promise<PokemonStats> {
+    const pokemons = await this.repository.findAll();
 
-        const typesCount = pokemons.reduce((acumulador, pokemon) => {
-            acumulador[pokemon.type] = (acumulador[pokemon.type] ?? 0) + 1;
-            return acumulador;
-        }, {} as Record<string, number>);
+    const typesCount = pokemons.reduce(
+      (acumulador, pokemon) => {
+        acumulador[pokemon.type] = (acumulador[pokemon.type] ?? 0) + 1;
+        return acumulador;
+      },
+      {} as Record<string, number>,
+    );
 
-        return {
-            totalPokemons: pokemons.length,
-            typesCount
-        };
-    }
+    return {
+      totalPokemons: pokemons.length,
+      typesCount,
+    };
+  }
 }

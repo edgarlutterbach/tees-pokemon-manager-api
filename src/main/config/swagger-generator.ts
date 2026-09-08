@@ -5,7 +5,8 @@ const doc = {
   info: {
     version: '1.0.0',
     title: 'PokeManager API',
-    description: 'API de gerenciamento de Pokémons e Treinadores — disciplina Tópicos Especiais em Engenharia de Software (UFF)',
+    description:
+      'API de gerenciamento de Pokémons e Treinadores — disciplina Tópicos Especiais em Engenharia de Software (UFF)',
   },
   host: 'localhost:3333',
   basePath: '/',
@@ -14,7 +15,10 @@ const doc = {
   produces: ['application/json'],
   tags: [
     { name: 'Pokemons', description: 'Endpoints de gerenciamento de Pokémons' },
-    { name: 'Trainers', description: 'Endpoints de gerenciamento de Treinadores' },
+    {
+      name: 'Trainers',
+      description: 'Endpoints de gerenciamento de Treinadores',
+    },
   ],
   definitions: {
     Pokemon: {

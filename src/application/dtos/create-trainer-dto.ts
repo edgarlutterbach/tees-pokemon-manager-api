@@ -1,5 +1,5 @@
 export interface CreateTrainerDTO {
-    name: string;
-    age: number;
-    city: string;
+  name: string;
+  age: number;
+  city: string;
 }

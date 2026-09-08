@@ -1,5 +1,5 @@
 export enum PokemonRarity {
-    COMMON = "COMMON",
-    RARE = "RARE",
-    LEGENDARY = "LEGENDARY",
+  COMMON = 'COMMON',
+  RARE = 'RARE',
+  LEGENDARY = 'LEGENDARY',
 }

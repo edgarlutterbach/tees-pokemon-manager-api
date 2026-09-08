@@ -5,7 +5,7 @@ const router = Router();
 const controller = makeTrainerController();
 
 router.post('/api/v1/trainers/', (req, res) => {
-    /*
+  /*
       #swagger.tags = ['Trainers']
       #swagger.summary = 'Cadastra um novo Treinador'
       #swagger.requestBody = {
@@ -17,7 +17,7 @@ router.post('/api/v1/trainers/', (req, res) => {
         description: 'Dados inválidos',
       }
     */
-    return controller.create(req, res);
+  return controller.create(req, res);
 });
 
 export { router as trainerRoutes };

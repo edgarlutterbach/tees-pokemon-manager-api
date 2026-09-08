@@ -1,3 +1,3 @@
 export interface TrainerParams {
-    trainerId: string;
+  trainerId: string;
 }

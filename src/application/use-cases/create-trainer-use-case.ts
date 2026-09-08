@@ -5,21 +5,28 @@ import { DomainError } from '../../domain/errors/domain-error';
 import { ErrorCode } from '../../domain/errors/error-code';
 
 export class CreateTrainerUseCase {
-    private repository: TrainerRepositoryContract;
+  private repository: TrainerRepositoryContract;
 
-    constructor(repository: TrainerRepositoryContract) {
-        this.repository = repository;
+  constructor(repository: TrainerRepositoryContract) {
+    this.repository = repository;
+  }
+
+  async execute(data: CreateTrainerDTO): Promise<Trainer> {
+    if (data.age <= 0) {
+      throw new DomainError(
+        'A idade deve ser um número positivo.',
+        ErrorCode.INVALID_ATTRIBUTES,
+      );
     }
 
-    async execute(data: CreateTrainerDTO): Promise<Trainer> {
-        if (data.age <= 0) {
-            throw new DomainError('A idade deve ser um número positivo.', ErrorCode.INVALID_ATTRIBUTES);
-        }
+    const trainer: Trainer = {
+      name: data.name,
+      age: data.age,
+      city: data.city,
+    };
 
-        const trainer: Trainer = { name: data.name, age: data.age, city: data.city };
+    await this.repository.create(trainer);
 
-        await this.repository.create(trainer);
-
-        return trainer;
-    }
+    return trainer;
+  }
 }

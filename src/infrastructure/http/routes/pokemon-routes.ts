@@ -1,20 +1,20 @@
-import { Router } from "express";
-import { makePokemonController } from "../../../main/factories/make-pokemon-controller";
+import { Router } from 'express';
+import { makePokemonController } from '../../../main/factories/make-pokemon-controller';
 
 const router = Router();
 const controller = makePokemonController();
 
 router.get('/api/v1/pokemons/stats', (req, res) => {
-    /*
+  /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Estatísticas gerais do catálogo'
       #swagger.description = 'Retorna o total de Pokémons cadastrados e a contagem por tipo.'
     */
-    return controller.stats(req, res);
+  return controller.stats(req, res);
 });
 
 router.get('/api/v1/pokemons', (req, res) => {
-    /*
+  /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Lista todos os Pokémons'
       #swagger.description = 'Retorna o catálogo completo, com filtro opcional por tipo.'
@@ -24,11 +24,11 @@ router.get('/api/v1/pokemons', (req, res) => {
         content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/definitions/Pokemon' } } } }
       }
     */
-    return controller.list(req, res);
+  return controller.list(req, res);
 });
 
 router.get('/api/v1/pokemons/:id', (req, res) => {
-    /*
+  /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Busca um Pokémon pelo ID'
       #swagger.parameters['id'] = { description: 'ID do Pokémon' }
@@ -41,11 +41,11 @@ router.get('/api/v1/pokemons/:id', (req, res) => {
         content: { 'application/json': { schema: { $ref: '#/definitions/ErrorResponse' } } }
       }
     */
-    return controller.getById(req, res);
+  return controller.getById(req, res);
 });
 
 router.post('/api/v1/pokemons/', (req, res) => {
-    /*
+  /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Cadastra um novo Pokémon'
       #swagger.requestBody = {
@@ -58,11 +58,11 @@ router.post('/api/v1/pokemons/', (req, res) => {
         content: { 'application/json': { schema: { $ref: '#/definitions/ErrorResponse' } } }
       }
     */
-    return controller.create(req, res);
+  return controller.create(req, res);
 });
 
 router.put('/api/v1/pokemons/:id', (req, res) => {
-    /*
+  /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Atualiza um Pokémon existente'
       #swagger.parameters['id'] = { description: 'ID do Pokémon' }
@@ -76,11 +76,11 @@ router.put('/api/v1/pokemons/:id', (req, res) => {
         content: { 'application/json': { schema: { $ref: '#/definitions/ErrorResponse' } } }
       }
     */
-    return controller.update(req, res);
+  return controller.update(req, res);
 });
 
 router.delete('/api/v1/pokemons/:id', (req, res) => {
-    /*
+  /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Remove um Pokémon do catálogo'
       #swagger.parameters['id'] = { description: 'ID do Pokémon' }
@@ -90,7 +90,7 @@ router.delete('/api/v1/pokemons/:id', (req, res) => {
         content: { 'application/json': { schema: { $ref: '#/definitions/ErrorResponse' } } }
       }
     */
-    return controller.delete(req, res);
+  return controller.delete(req, res);
 });
 
 export { router as pokemonRoutes };

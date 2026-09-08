@@ -1,18 +1,18 @@
-import { Pokemon } from "../../domain/entities/pokemon";
-import { PokemonRepositoryContract } from "../../domain/repositories/pokemon-repository-contract";
+import { Pokemon } from '../../domain/entities/pokemon';
+import { PokemonRepositoryContract } from '../../domain/repositories/pokemon-repository-contract';
 
 export class ListPokemonsUseCase {
-    private repository: PokemonRepositoryContract;
+  private repository: PokemonRepositoryContract;
 
-    constructor(repository: PokemonRepositoryContract) {
-        this.repository = repository;
+  constructor(repository: PokemonRepositoryContract) {
+    this.repository = repository;
+  }
+
+  execute(type?: string): Promise<Pokemon[]> {
+    if (type) {
+      return this.repository.findByType(type);
     }
 
-    execute(type?: string): Promise<Pokemon[]> {
-        if(type) {
-            return this.repository.findByType(type);
-        }
-
-        return this.repository.findAll();
-    }
+    return this.repository.findAll();
+  }
 }
