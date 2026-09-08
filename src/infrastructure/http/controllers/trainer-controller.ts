@@ -23,10 +23,6 @@ export class TrainerController {
 
             return res.status(201).json({ message: 'Treinador cadastrado com sucesso!', data: trainer });
         } catch (error) {
-            if (error instanceof DomainError && error.code === ErrorCode.INVALID_ATTRIBUTES) {
-                return res.status(400).json({ error: error.message });
-            }
-
             return res.status(500).json({ error: 'Erro interno no servidor.' });
         }
     }

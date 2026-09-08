@@ -1,0 +1,420 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "PokeManager API",
+    "description": "API de gerenciamento de Pokémons e Treinadores — disciplina Tópicos Especiais em Engenharia de Software (UFF)"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Pokemons",
+      "description": "Endpoints de gerenciamento de Pokémons"
+    },
+    {
+      "name": "Trainers",
+      "description": "Endpoints de gerenciamento de Treinadores"
+    }
+  ],
+  "paths": {
+    "/api/v1/pokemons/stats": {
+      "get": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Estatísticas gerais do catálogo",
+        "description": "Retorna o total de Pokémons cadastrados e a contagem por tipo.",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/pokemons": {
+      "get": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Lista todos os Pokémons",
+        "description": "Retorna o catálogo completo, com filtro opcional por tipo.",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filtra pelo tipo (ex: FIRE)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de Pokémons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pokemon"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pokemons/{id}": {
+      "get": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Busca um Pokémon pelo ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do Pokémon"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pokémon encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pokemon"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pokémon não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Atualiza um Pokémon existente",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do Pokémon"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pokémon atualizado com sucesso"
+          },
+          "404": {
+            "description": "Pokémon não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePokemonDto"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Remove um Pokémon do catálogo",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do Pokémon"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Pokémon removido com sucesso"
+          },
+          "404": {
+            "description": "Pokémon não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pokemons/": {
+      "post": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Cadastra um novo Pokémon",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Pokémon criado com sucesso"
+          },
+          "400": {
+            "description": "Dados inválidos ou ID duplicado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePokemonDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trainers/": {
+      "post": {
+        "tags": [
+          "Trainers"
+        ],
+        "summary": "Cadastra um novo Treinador",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Treinador cadastrado com sucesso"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrainerDto"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pokemon": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "25"
+          },
+          "name": {
+            "type": "string",
+            "example": "Pikachu"
+          },
+          "type": {
+            "type": "string",
+            "example": "ELECTRIC"
+          },
+          "rarity": {
+            "type": "string",
+            "example": "RARE"
+          },
+          "hp": {
+            "type": "number",
+            "example": 35
+          },
+          "attack": {
+            "type": "number",
+            "example": 55
+          },
+          "defense": {
+            "type": "number",
+            "example": 40
+          },
+          "nickname": {
+            "type": "string",
+            "example": "Pika"
+          }
+        }
+      },
+      "CreatePokemonDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "25"
+          },
+          "name": {
+            "type": "string",
+            "example": "Pikachu"
+          },
+          "type": {
+            "type": "string",
+            "example": "ELECTRIC"
+          },
+          "rarity": {
+            "type": "string",
+            "example": "RARE"
+          },
+          "hp": {
+            "type": "number",
+            "example": 35
+          },
+          "attack": {
+            "type": "number",
+            "example": 55
+          },
+          "defense": {
+            "type": "number",
+            "example": 40
+          },
+          "nickname": {
+            "type": "string",
+            "example": "Pika"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "rarity",
+          "hp",
+          "attack",
+          "defense"
+        ]
+      },
+      "UpdatePokemonDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Raichu"
+          },
+          "type": {
+            "type": "string",
+            "example": "ELECTRIC"
+          },
+          "rarity": {
+            "type": "string",
+            "example": "RARE"
+          },
+          "hp": {
+            "type": "number",
+            "example": 50
+          },
+          "attack": {
+            "type": "number",
+            "example": 65
+          },
+          "defense": {
+            "type": "number",
+            "example": 45
+          },
+          "nickname": {
+            "type": "string",
+            "example": "Rai"
+          }
+        }
+      },
+      "Trainer": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Ash Ketchum"
+          },
+          "age": {
+            "type": "number",
+            "example": 10
+          },
+          "city": {
+            "type": "string",
+            "example": "Pallet Town"
+          }
+        }
+      },
+      "CreateTrainerDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Ash Ketchum"
+          },
+          "age": {
+            "type": "number",
+            "example": 10
+          },
+          "city": {
+            "type": "string",
+            "example": "Pallet Town"
+          }
+        },
+        "required": [
+          "name",
+          "age",
+          "city"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Pokémon não encontrado no catálogo."
+          }
+        }
+      }
+    }
+  }
+}

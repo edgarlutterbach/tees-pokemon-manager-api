@@ -4,6 +4,20 @@ import { makeTrainerController } from '../../../main/factories/make-trainer-cont
 const router = Router();
 const controller = makeTrainerController();
 
-router.post('/', (req, res) => controller.create(req, res));
+router.post('/api/v1/trainers/', (req, res) => {
+    /*
+      #swagger.tags = ['Trainers']
+      #swagger.summary = 'Cadastra um novo Treinador'
+      #swagger.requestBody = {
+        required: true,
+        content: { 'application/json': { schema: { $ref: '#/definitions/CreateTrainerDto' } } }
+      }
+      #swagger.responses[201] = { description: 'Treinador cadastrado com sucesso' }
+      #swagger.responses[400] = {
+        description: 'Dados inválidos',
+      }
+    */
+    return controller.create(req, res);
+});
 
 export { router as trainerRoutes };

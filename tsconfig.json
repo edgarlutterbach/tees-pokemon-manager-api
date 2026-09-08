@@ -12,6 +12,7 @@
       "@main/*": ["./src/main/*"]
     },
     "types": ["node"],
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
