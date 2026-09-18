@@ -11,35 +11,18 @@ export class TrainerController {
     this.createUseCase = createUseCase;
   }
 
-  async create(
-    req: Request<Record<string, never>, unknown, CreateTrainerDTO>,
-    res: Response,
-  ): Promise<Response> {
+  async create(req: Request<Record<string, never>, unknown, CreateTrainerDTO>, res: Response): Promise<Response> {
     const { name, age, city } = req.body;
 
     if (!name || !city || age === undefined) {
-      return res.status(400).json({
-        error:
-          'Campos obrigatórios ausentes: name, age e city são necessários.',
-      });
+      throw new DomainError('Campos obrigatórios ausentes: name, age e city são necessários.', ErrorCode.INVALID_ATTRIBUTES);
     }
+    
+    const trainer = await this.createUseCase.execute({ name, age, city });
 
-    try {
-      const trainer = await this.createUseCase.execute({ name, age, city });
-
-      return res
-        .status(201)
-        .json({ message: 'Treinador cadastrado com sucesso!', data: trainer });
-    } catch (error) {
-      if (
-        error instanceof DomainError &&
-        (error.code === ErrorCode.INVALID_ATTRIBUTES ||
-          error.code === ErrorCode.DUPLICATE_RESOURCE)
-      ) {
-        return res.status(400).json({ error: error.message });
-      }
-
-      return res.status(500).json({ error: 'Erro interno no servidor.' });
-    }
+    return res.status(201).json({
+      message: 'Treinador cadastrado com sucesso!',
+      data: trainer
+    });
   }
 }

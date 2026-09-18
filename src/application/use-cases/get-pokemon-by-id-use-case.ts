@@ -13,7 +13,7 @@ export class GetPokemonByIdUseCase {
     const pokemon = await this.repository.findById(id);
 
     if (!pokemon) {
-      throw new ResourceNotFoundError('Pokémon não encontrado no catálogo.');
+      throw new ResourceNotFoundError('Pokémon não encontrado na base de dados.');
     }
 
     return pokemon;

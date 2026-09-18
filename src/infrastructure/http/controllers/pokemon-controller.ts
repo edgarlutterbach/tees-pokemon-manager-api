@@ -5,8 +5,6 @@ import { CreatePokemonUseCase } from '@application/use-cases/create-pokemon-use-
 import { UpdatePokemonUseCase } from '@application/use-cases/update-pokemon-use-case';
 import { DeletePokemonUseCase } from '@application/use-cases/delete-pokemon-use-case';
 import { GetPokemonStatsUseCase } from '@application/use-cases/get-pokemon-stats-use-case';
-import { DomainError } from '@domain/errors/domain-error';
-import { ErrorCode } from '@domain/errors/error-code';
 
 export class PokemonController {
   private listUseCase: ListPokemonsUseCase;
@@ -42,88 +40,35 @@ export class PokemonController {
 
   async getById(req: Request, res: Response): Promise<Response> {
     const id = String(req.params.id);
+    const pokemon = await this.getByIdUseCase.execute(id);
 
-    try {
-      const pokemon = await this.getByIdUseCase.execute(id);
-      return res.status(200).json(pokemon);
-    } catch (error) {
-      if (
-        error instanceof DomainError &&
-        error.code === ErrorCode.RESOURCE_NOT_FOUND
-      ) {
-        return res.status(404).json({ error: error.message });
-      }
-
-      return res.status(500).json({ error: 'Erro interno no servidor.' });
-    }
+    return res.status(200).json(pokemon);
   }
 
   async create(req: Request, res: Response): Promise<Response> {
-    try {
-      const pokemon = await this.createUseCase.execute(req.body);
+    const pokemon = await this.createUseCase.execute(req.body);
 
-      return res.status(201).json({
-        message: 'Pokémon cadastrado com sucesso!',
-        data: pokemon,
-      });
-    } catch (error) {
-      if (
-        error instanceof DomainError &&
-        (error.code === ErrorCode.DUPLICATE_RESOURCE ||
-          error.code === ErrorCode.INVALID_ATTRIBUTES)
-      ) {
-        return res.status(400).json({ error: error.message });
-      }
-
-      return res.status(500).json({ error: 'Erro interno no servidor.' });
-    }
+    return res.status(201).json({
+      message: 'Pokémon cadastrado com sucesso!',
+      data: pokemon,
+    });
   }
 
   async update(req: Request, res: Response): Promise<Response> {
     const id = String(req.params.id);
+    const pokemon = await this.updateUseCase.execute(id, req.body);
 
-    try {
-      const pokemon = await this.updateUseCase.execute(id, req.body);
-
-      return res.status(200).json({
-        message: 'Pokémon editado com sucesso!',
-        data: pokemon,
-      });
-    } catch (error) {
-      if (
-        error instanceof DomainError &&
-        error.code === ErrorCode.RESOURCE_NOT_FOUND
-      ) {
-        return res.status(404).json({ error: error.message });
-      }
-
-      if (
-        error instanceof DomainError &&
-        error.code === ErrorCode.INVALID_ATTRIBUTES
-      ) {
-        return res.status(400).json({ error: error.message });
-      }
-
-      return res.status(500).json({ error: 'Erro interno no servidor.' });
-    }
+    return res.status(200).json({
+      message: 'Pokémon editado com sucesso!',
+      data: pokemon,
+    });
   }
 
   async delete(req: Request, res: Response): Promise<Response> {
     const id = String(req.params.id);
+    await this.deleteUseCase.execute(id);
 
-    try {
-      await this.deleteUseCase.execute(id);
-      return res.status(204).send();
-    } catch (error) {
-      if (
-        error instanceof DomainError &&
-        error.code === ErrorCode.RESOURCE_NOT_FOUND
-      ) {
-        return res.status(404).json({ error: error.message });
-      }
-
-      return res.status(500).json({ error: 'Erro interno no servidor.' });
-    }
+    return res.status(204).send();
   }
 
   async stats(req: Request, res: Response): Promise<Response> {
