@@ -54,9 +54,13 @@ router.post('/api/v1/pokemons/', (req, res) => {
       }
       #swagger.responses[201] = { description: 'Pokémon criado com sucesso' }
       #swagger.responses[400] = {
-        description: 'Dados inválidos ou ID duplicado',
+        description: 'Dados inválidos',
         content: { 'application/json': { schema: { $ref: '#/definitions/ErrorResponse' } } }
       }
+      #swagger.responses[409] = {
+        description: 'Já existe um Pokémon cadastrado com este ID',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ErrorResponse' } } }
+      } 
     */
   return controller.create(req, res);
 });
@@ -75,6 +79,10 @@ router.put('/api/v1/pokemons/:id', (req, res) => {
         description: 'Pokémon não encontrado',
         content: { 'application/json': { schema: { $ref: '#/definitions/ErrorResponse' } } }
       }
+      #swagger.responses[400] = {
+        description: 'Dados inválidos',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ErrorResponse' } } }
+      }  
     */
   return controller.update(req, res);
 });

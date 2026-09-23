@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { pokemonRoutes } from '@infrastructure/http/routes/pokemon-routes';
 import { trainerRoutes } from '@infrastructure/http/routes/trainer-routes';
 import { swaggerUi, swaggerDocument } from './config/swagger';
+import { errorHandler } from '@infrastructure/http/middlewares/error-handler'
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(pokemonRoutes);
 app.use(trainerRoutes);
+
+app.use(errorHandler);
 
 const PORT = 3333;
 

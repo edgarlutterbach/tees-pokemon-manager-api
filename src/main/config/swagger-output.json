@@ -131,6 +131,16 @@
           "200": {
             "description": "Pokémon atualizado com sucesso"
           },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Pokémon não encontrado",
             "content": {
@@ -199,7 +209,17 @@
             "description": "Pokémon criado com sucesso"
           },
           "400": {
-            "description": "Dados inválidos ou ID duplicado",
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Já existe um Pokémon cadastrado com este ID",
             "content": {
               "application/json": {
                 "schema": {
@@ -233,7 +253,14 @@
             "description": "Treinador cadastrado com sucesso"
           },
           "400": {
-            "description": "Dados inválidos"
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -409,9 +436,17 @@
       "ErrorResponse": {
         "type": "object",
         "properties": {
-          "error": {
+          "status": {
             "type": "string",
-            "example": "Pokémon não encontrado no catálogo."
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 404
+          },
+          "message": {
+            "type": "string",
+            "example": "Pokémon não encontrado na base de dados."
           }
         }
       }

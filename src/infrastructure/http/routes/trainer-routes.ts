@@ -15,6 +15,7 @@ router.post('/api/v1/trainers/', (req, res) => {
       #swagger.responses[201] = { description: 'Treinador cadastrado com sucesso' }
       #swagger.responses[400] = {
         description: 'Dados inválidos',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ErrorResponse' } } }
       }
     */
   return controller.create(req, res);

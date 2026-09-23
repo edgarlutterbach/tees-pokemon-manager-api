@@ -61,7 +61,9 @@ const doc = {
       $city: 'Pallet Town',
     },
     ErrorResponse: {
-      error: 'Pokémon não encontrado no catálogo.',
+      status: 'error',
+      statusCode: 404,
+      message: 'Pokémon não encontrado na base de dados.'
     },
   },
 };
