@@ -20,7 +20,7 @@ app.use(trainerRoutes);
 
 app.use(errorHandler);
 
-const PORT = 3333;
+const PORT = Number(process.env.PORT) || 3333;
 
 app.listen(PORT, () => {
   console.log(`⚡️ [server]: API rodando em http://localhost:${PORT}`);
