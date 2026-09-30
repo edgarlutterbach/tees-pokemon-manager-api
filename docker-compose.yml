@@ -8,6 +8,8 @@ services:
       - .env
     depends_on:
       - db
+    environment:
+      NODE_ENV: production
 
   db:
     image: postgres:17-alpine
