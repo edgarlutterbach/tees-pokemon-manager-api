@@ -11,18 +11,24 @@ export class TrainerController {
     this.createUseCase = createUseCase;
   }
 
-  async create(req: Request<Record<string, never>, unknown, CreateTrainerDTO>, res: Response): Promise<Response> {
+  async create(
+    req: Request<Record<string, never>, unknown, CreateTrainerDTO>,
+    res: Response,
+  ): Promise<Response> {
     const { name, age, city } = req.body;
 
     if (!name || !city || age === undefined) {
-      throw new DomainError('Campos obrigatórios ausentes: name, age e city são necessários.', ErrorCode.INVALID_ATTRIBUTES);
+      throw new DomainError(
+        'Campos obrigatórios ausentes: name, age e city são necessários.',
+        ErrorCode.INVALID_ATTRIBUTES,
+      );
     }
-    
+
     const trainer = await this.createUseCase.execute({ name, age, city });
 
     return res.status(201).json({
       message: 'Treinador cadastrado com sucesso!',
-      data: trainer
+      data: trainer,
     });
   }
 }

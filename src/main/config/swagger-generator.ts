@@ -63,7 +63,7 @@ const doc = {
     ErrorResponse: {
       status: 'error',
       statusCode: 404,
-      message: 'Pokémon não encontrado na base de dados.'
+      message: 'Pokémon não encontrado na base de dados.',
     },
   },
 };

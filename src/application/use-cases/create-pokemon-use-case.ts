@@ -14,7 +14,9 @@ export class CreatePokemonUseCase {
     const pokemonExistente = await this.repository.findById(data.id);
 
     if (pokemonExistente) {
-      throw new DuplicateResourceError('Já existe um Pokémon cadastrado com este ID.');
+      throw new DuplicateResourceError(
+        'Já existe um Pokémon cadastrado com este ID.',
+      );
     }
 
     const novoPokemon = new Pokemon(data);
