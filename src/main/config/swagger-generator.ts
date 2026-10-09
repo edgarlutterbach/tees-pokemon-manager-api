@@ -30,6 +30,7 @@ const doc = {
       attack: 55,
       defense: 40,
       nickname: 'Pika',
+      level: 25,
     },
     CreatePokemonDto: {
       $id: '25',
@@ -50,6 +51,9 @@ const doc = {
       defense: 45,
       nickname: 'Rai',
     },
+    UpdatePokemonLevelDto: {
+      $level: 25,
+    },
     Trainer: {
       name: 'Ash Ketchum',
       age: 10,
@@ -60,10 +64,20 @@ const doc = {
       $age: 10,
       $city: 'Pallet Town',
     },
-    ErrorResponse: {
+    BadRequestError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Level deve ser um número inteiro entre 1 e 100.',
+    },
+    NotFoundError: {
       status: 'error',
       statusCode: 404,
-      message: 'Pokémon não encontrado na base de dados.',
+      message: 'Pokémon não encontrado no catálogo.',
+    },
+    ConflictError: {
+      status: 'error',
+      statusCode: 409,
+      message: 'Já existe um Pokémon cadastrado com este ID.',
     },
   },
 };

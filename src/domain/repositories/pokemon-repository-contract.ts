@@ -7,4 +7,5 @@ export interface PokemonRepositoryContract {
   findByType(type: string): Promise<Pokemon[]>;
   update(pokemon: Pokemon): Promise<void>;
   delete(id: string): Promise<void>;
+  updateLevel(id: string, newLevel: number): Promise<void>;
 }

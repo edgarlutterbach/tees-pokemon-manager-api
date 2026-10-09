@@ -103,7 +103,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -136,7 +136,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/BadRequestError"
                 }
               }
             }
@@ -146,7 +146,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -189,7 +189,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -213,7 +213,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/BadRequestError"
                 }
               }
             }
@@ -223,7 +223,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/ConflictError"
                 }
               }
             }
@@ -235,6 +235,68 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreatePokemonDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pokemons/{id}/level": {
+      "patch": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Atualiza o nível de um Pokémon",
+        "description": "Altera apenas o nível do Pokémon. O valor deve ser um inteiro entre 1 e 100.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do Pokémon"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nível atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pokemon"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Nível ausente ou fora do intervalo permitido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pokémon não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePokemonLevelDto"
               }
             }
           }
@@ -312,6 +374,10 @@
           "nickname": {
             "type": "string",
             "example": "Pika"
+          },
+          "level": {
+            "type": "number",
+            "example": 25
           }
         }
       },
@@ -394,6 +460,18 @@
           }
         }
       },
+      "UpdatePokemonLevelDto": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number",
+            "example": 25
+          }
+        },
+        "required": [
+          "level"
+        ]
+      },
       "Trainer": {
         "type": "object",
         "properties": {
@@ -433,7 +511,24 @@
           "city"
         ]
       },
-      "ErrorResponse": {
+      "BadRequestError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Level deve ser um número inteiro entre 1 e 100."
+          }
+        }
+      },
+      "NotFoundError": {
         "type": "object",
         "properties": {
           "status": {
@@ -446,7 +541,24 @@
           },
           "message": {
             "type": "string",
-            "example": "Pokémon não encontrado na base de dados."
+            "example": "Pokémon não encontrado no catálogo."
+          }
+        }
+      },
+      "ConflictError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 409
+          },
+          "message": {
+            "type": "string",
+            "example": "Já existe um Pokémon cadastrado com este ID."
           }
         }
       }

@@ -13,15 +13,17 @@ interface PokemonRow {
   attack: number;
   defense: number;
   nickname: string | null;
+  level: number;
 }
 
-const SELECT_COLUMNS = 'id, name, type, rarity, hp, attack, defense, nickname';
+const SELECT_COLUMNS =
+  'id, name, type, rarity, hp, attack, defense, nickname, level';
 
 export class PgPokemonRepository implements PokemonRepositoryContract {
   async create(pokemon: Pokemon): Promise<void> {
     const query = `
-      INSERT INTO pokemons (id, name, type, rarity, hp, attack, defense, nickname)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO pokemons (id, name, type, rarity, hp, attack, defense, nickname, level)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     `;
     await postgresPool.query(query, [
       pokemon.id,
@@ -32,6 +34,7 @@ export class PgPokemonRepository implements PokemonRepositoryContract {
       pokemon.attack,
       pokemon.defense,
       pokemon.nickname ?? null,
+      pokemon.level,
     ]);
   }
 
@@ -64,7 +67,7 @@ export class PgPokemonRepository implements PokemonRepositoryContract {
     const query = `
       UPDATE pokemons
       SET name = $2, type = $3, rarity = $4, hp = $5,
-          attack = $6, defense = $7, nickname = $8
+          attack = $6, defense = $7, nickname = $8, level = $9
       WHERE id = $1
     `;
     await postgresPool.query(query, [
@@ -76,7 +79,13 @@ export class PgPokemonRepository implements PokemonRepositoryContract {
       pokemon.attack,
       pokemon.defense,
       pokemon.nickname ?? null,
+      pokemon.level,
     ]);
+  }
+
+  async updateLevel(id: string, newLevel: number): Promise<void> {
+    const query = `UPDATE pokemons SET level = $2 WHERE id = $1`;
+    await postgresPool.query(query, [id, newLevel]);
   }
 
   async delete(id: string): Promise<void> {
@@ -94,6 +103,7 @@ export class PgPokemonRepository implements PokemonRepositoryContract {
       attack: row.attack,
       defense: row.defense,
       nickname: row.nickname ?? undefined,
+      level: row.level,
     });
   }
 }

@@ -26,6 +26,7 @@ export class UpdatePokemonUseCase {
       attack: data.attack ?? existingPokemon.attack,
       defense: data.defense ?? existingPokemon.defense,
       nickname: data.nickname ?? existingPokemon.nickname,
+      level: existingPokemon.level,
     });
 
     await this.repository.update(updatedPokemon);

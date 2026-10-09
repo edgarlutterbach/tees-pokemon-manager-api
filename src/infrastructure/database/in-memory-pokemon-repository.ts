@@ -35,6 +35,14 @@ export class InMemoryPokemonRepository implements PokemonRepositoryContract {
     }
   }
 
+  async updateLevel(id: string, newLevel: number): Promise<void> {
+    const index = this.pokemons.findIndex((p) => p.id === id);
+
+    if (index !== -1) {
+      this.pokemons[index] = this.pokemons[index].withLevel(newLevel);
+    }
+  }
+
   async delete(id: string): Promise<void> {
     this.pokemons = this.pokemons.filter((p) => p.id !== id);
   }
