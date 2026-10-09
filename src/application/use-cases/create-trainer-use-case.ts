@@ -1,8 +1,6 @@
 import { TrainerRepositoryContract } from '@domain/repositories/trainer-repository-contract';
 import { Trainer } from '@domain/entities/trainer';
-import { CreateTrainerDTO } from '../dtos/create-trainer-dto';
-import { DomainError } from '@domain/errors/domain-error';
-import { ErrorCode } from '@domain/errors/error-code';
+import { CreateTrainerDTO } from '@application/dtos/create-trainer-dto';
 
 export class CreateTrainerUseCase {
   private repository: TrainerRepositoryContract;
@@ -12,18 +10,7 @@ export class CreateTrainerUseCase {
   }
 
   async execute(data: CreateTrainerDTO): Promise<Trainer> {
-    if (data.age <= 0) {
-      throw new DomainError(
-        'A idade deve ser um número positivo.',
-        ErrorCode.INVALID_ATTRIBUTES,
-      );
-    }
-
-    const trainer: Trainer = {
-      name: data.name,
-      age: data.age,
-      city: data.city,
-    };
+    const trainer = new Trainer(data);
 
     await this.repository.create(trainer);
 

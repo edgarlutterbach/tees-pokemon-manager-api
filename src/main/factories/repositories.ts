@@ -1,7 +1,7 @@
 import { PgPokemonRepository } from '@infrastructure/database/postgres/pg-pokemon-repository';
-import { InMemoryTrainerRepository } from '@infrastructure/database/in-memory-trainer-repository';
+import { PgTrainerRepository } from '@infrastructure/database/postgres/pg-trainer-repository';
 
 const pokemonRepository = new PgPokemonRepository();
-const trainerRepository = new InMemoryTrainerRepository();
+const trainerRepository = new PgTrainerRepository();
 
 export { pokemonRepository, trainerRepository };

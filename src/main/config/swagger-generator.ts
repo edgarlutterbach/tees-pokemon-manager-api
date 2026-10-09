@@ -55,12 +55,15 @@ const doc = {
       $level: 25,
     },
     Trainer: {
+      id: '3f2b8c1e-6a4d-4e7b-9c2a-1d5e8f7a6b3c',
       name: 'Ash Ketchum',
+      email: 'ash@pokemon.com',
       age: 10,
       city: 'Pallet Town',
     },
     CreateTrainerDto: {
       $name: 'Ash Ketchum',
+      $email: 'ash@pokemon.com',
       $age: 10,
       $city: 'Pallet Town',
     },
@@ -78,6 +81,16 @@ const doc = {
       status: 'error',
       statusCode: 409,
       message: 'Já existe um Pokémon cadastrado com este ID.',
+    },
+    TrainerBadRequestError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'E-mail inválido.',
+    },
+    TrainerConflictError: {
+      status: 'error',
+      statusCode: 409,
+      message: 'Já existe um Treinador cadastrado com este e-mail.',
     },
   },
 };

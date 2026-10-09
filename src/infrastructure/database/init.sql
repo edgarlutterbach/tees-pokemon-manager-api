@@ -20,6 +20,16 @@ CREATE TABLE IF NOT EXISTS pokemons (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Tabela de Treinadores
+CREATE TABLE IF NOT EXISTS trainers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(150) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  age INTEGER NOT NULL CHECK (age > 0),
+  city VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Catálogo inicial
 INSERT INTO pokemons (id, name, type, rarity, hp, attack, defense, nickname) VALUES
   ('1',  'Bulbasaur',  'GRASS',   'COMMON',    45,  49,  55,  NULL),
