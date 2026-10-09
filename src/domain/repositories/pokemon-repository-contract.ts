@@ -8,4 +8,6 @@ export interface PokemonRepositoryContract {
   update(pokemon: Pokemon): Promise<void>;
   delete(id: string): Promise<void>;
   updateLevel(id: string, newLevel: number): Promise<void>;
+  searchByName(term: string): Promise<Pokemon[]>;
+  count(): Promise<number>;
 }

@@ -114,4 +114,18 @@ export class Pokemon {
       level: newLevel,
     });
   }
+
+  toJSON() {
+    return {
+      id: this._id,
+      name: this._name,
+      type: this._type,
+      rarity: this._rarity,
+      hp: this._hp,
+      attack: this._attack,
+      defense: this._defense,
+      nickname: this._nickname,
+      level: this._level,
+    };
+  }
 }

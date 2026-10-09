@@ -13,6 +13,24 @@ router.get('/api/v1/pokemons/stats', (req, res) => {
   return controller.stats(req, res);
 });
 
+router.get('/api/v1/pokemons/search', (req, res) => {
+  /*
+      #swagger.tags = ['Pokemons']
+      #swagger.summary = 'Busca Pokémons por nome parcial'
+      #swagger.description = 'Busca case-insensitive por parte do nome. Retorna os resultados e o total do catálogo.'
+      #swagger.parameters['name'] = { in: 'query', type: 'string', required: true, description: 'Termo de busca (ex: pika)' }
+      #swagger.responses[200] = {
+        description: 'Resultado da busca',
+        content: { 'application/json': { schema: { $ref: '#/definitions/SearchPokemonsResult' } } }
+      }
+      #swagger.responses[400] = {
+        description: 'Termo de busca ausente',
+        content: { 'application/json': { schema: { $ref: '#/definitions/SearchBadRequestError' } } }
+      }
+    */
+  return controller.searchByName(req, res);
+});
+
 router.get('/api/v1/pokemons', (req, res) => {
   /*
       #swagger.tags = ['Pokemons']

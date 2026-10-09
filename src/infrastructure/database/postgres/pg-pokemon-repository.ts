@@ -16,6 +16,10 @@ interface PokemonRow {
   level: number;
 }
 
+interface CountRow {
+  total: string;
+}
+
 const SELECT_COLUMNS =
   'id, name, type, rarity, hp, attack, defense, nickname, level';
 
@@ -63,6 +67,26 @@ export class PgPokemonRepository implements PokemonRepositoryContract {
     return result.rows.map((row) => this.toEntity(row));
   }
 
+  async searchByName(term: string): Promise<Pokemon[]> {
+    const query = `
+      SELECT ${SELECT_COLUMNS} FROM pokemons
+      WHERE name ILIKE $1
+      ORDER BY name
+    `;
+    const result = await postgresPool.query<PokemonRow>(query, [
+      `%${this.escapeLikePattern(term)}%`,
+    ]);
+
+    return result.rows.map((row) => this.toEntity(row));
+  }
+
+  async count(): Promise<number> {
+    const query = `SELECT COUNT(*) AS total FROM pokemons`;
+    const result = await postgresPool.query<CountRow>(query);
+
+    return Number(result.rows[0].total);
+  }
+
   async update(pokemon: Pokemon): Promise<void> {
     const query = `
       UPDATE pokemons
@@ -91,6 +115,10 @@ export class PgPokemonRepository implements PokemonRepositoryContract {
   async delete(id: string): Promise<void> {
     const query = `DELETE FROM pokemons WHERE id = $1`;
     await postgresPool.query(query, [id]);
+  }
+
+  private escapeLikePattern(term: string): string {
+    return term.replace(/[\\%_]/g, '\\$&');
   }
 
   private toEntity(row: PokemonRow): Pokemon {

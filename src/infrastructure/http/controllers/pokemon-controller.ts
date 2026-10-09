@@ -6,6 +6,7 @@ import { UpdatePokemonUseCase } from '@application/use-cases/update-pokemon-use-
 import { DeletePokemonUseCase } from '@application/use-cases/delete-pokemon-use-case';
 import { GetPokemonStatsUseCase } from '@application/use-cases/get-pokemon-stats-use-case';
 import { UpdatePokemonLevelUseCase } from '@application/use-cases/update-pokemon-level-use-case';
+import { SearchPokemonsByNameUseCase } from '@application/use-cases/search-pokemons-by-name-use-case';
 
 export class PokemonController {
   private listUseCase: ListPokemonsUseCase;
@@ -15,6 +16,7 @@ export class PokemonController {
   private deleteUseCase: DeletePokemonUseCase;
   private statsUseCase: GetPokemonStatsUseCase;
   private updateLevelUseCase: UpdatePokemonLevelUseCase;
+  private searchByNameUseCase: SearchPokemonsByNameUseCase;
 
   constructor(
     listUseCase: ListPokemonsUseCase,
@@ -24,6 +26,7 @@ export class PokemonController {
     deleteUseCase: DeletePokemonUseCase,
     statsUseCase: GetPokemonStatsUseCase,
     updateLevelUseCase: UpdatePokemonLevelUseCase,
+    searchByNameUseCase: SearchPokemonsByNameUseCase,
   ) {
     this.listUseCase = listUseCase;
     this.getByIdUseCase = getByIdUseCase;
@@ -32,6 +35,7 @@ export class PokemonController {
     this.deleteUseCase = deleteUseCase;
     this.statsUseCase = statsUseCase;
     this.updateLevelUseCase = updateLevelUseCase;
+    this.searchByNameUseCase = searchByNameUseCase;
   }
 
   async list(req: Request, res: Response): Promise<Response> {
@@ -90,5 +94,13 @@ export class PokemonController {
       message: 'Nível do Pokémon atualizado com sucesso!',
       data: pokemon,
     });
+  }
+
+  async searchByName(req: Request, res: Response): Promise<Response> {
+    const term = typeof req.query.name === 'string' ? req.query.name : '';
+
+    const result = await this.searchByNameUseCase.execute(term);
+
+    return res.status(200).json(result);
   }
 }

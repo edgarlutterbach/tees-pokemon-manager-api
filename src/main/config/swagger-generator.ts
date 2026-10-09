@@ -92,6 +92,29 @@ const doc = {
       statusCode: 409,
       message: 'Já existe um Treinador cadastrado com este e-mail.',
     },
+    SearchPokemonsResult: {
+      term: 'pika',
+      totalMatches: 1,
+      totalCatalog: 6,
+      data: [
+        {
+          id: '25',
+          name: 'Pikachu',
+          type: 'ELECTRIC',
+          rarity: 'RARE',
+          hp: 35,
+          attack: 55,
+          defense: 40,
+          nickname: 'Pika',
+          level: 25,
+        },
+      ],
+    },
+    SearchBadRequestError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'O parâmetro name é obrigatório para a busca.',
+    },
   },
 };
 

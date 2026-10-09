@@ -7,6 +7,7 @@ import { UpdatePokemonUseCase } from '@application/use-cases/update-pokemon-use-
 import { DeletePokemonUseCase } from '@application/use-cases/delete-pokemon-use-case';
 import { GetPokemonStatsUseCase } from '@application/use-cases/get-pokemon-stats-use-case';
 import { UpdatePokemonLevelUseCase } from '@application/use-cases/update-pokemon-level-use-case';
+import { SearchPokemonsByNameUseCase } from '@application/use-cases/search-pokemons-by-name-use-case';
 
 export function makePokemonController(): PokemonController {
   const listUseCase = new ListPokemonsUseCase(pokemonRepository);
@@ -16,6 +17,9 @@ export function makePokemonController(): PokemonController {
   const deleteUseCase = new DeletePokemonUseCase(pokemonRepository);
   const statsUseCase = new GetPokemonStatsUseCase(pokemonRepository);
   const updateLevelUseCase = new UpdatePokemonLevelUseCase(pokemonRepository);
+  const searchByNameUseCase = new SearchPokemonsByNameUseCase(
+    pokemonRepository,
+  );
 
   const controller = new PokemonController(
     listUseCase,
@@ -25,6 +29,7 @@ export function makePokemonController(): PokemonController {
     deleteUseCase,
     statsUseCase,
     updateLevelUseCase,
+    searchByNameUseCase,
   );
 
   return controller;
