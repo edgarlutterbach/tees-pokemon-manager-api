@@ -10,4 +10,5 @@ export interface CreatePokemonDTO {
   attack: number;
   defense: number;
   nickname?: string;
+  level?: number;
 }

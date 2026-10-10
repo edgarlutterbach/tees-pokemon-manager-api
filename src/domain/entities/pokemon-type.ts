@@ -4,4 +4,6 @@ export enum PokemonType {
   WATER = 'WATER',
   ELECTRIC = 'ELECTRIC',
   PSYCHIC = 'PSYCHIC',
+  POISON = 'POISON',
+  FLYING = 'FLYING',
 }
