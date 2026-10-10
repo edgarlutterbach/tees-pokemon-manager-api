@@ -1,21 +1,20 @@
-
 # ==========================================
 # Estágio 1: Build (Compilação do TypeScript)
 # ==========================================
 FROM node:26-alpine AS builder
 
+# O motor do Prisma depende do OpenSSL, ausente na imagem Alpine
+RUN apk add --no-cache openssl
+
 WORKDIR /usr/src/app
 
-# Copia os arquivos de dependências
 COPY package*.json ./
-
-# Instala todas as dependências (incluindo devDependencies para compilar)
 RUN npm ci
 
-# Copia o código-fonte e configurações
 COPY . .
 
-# Gera os arquivos compilados em JavaScript na pasta /dist
+# Gera o Prisma Client antes da compilação, para o tsc conhecer os tipos dos models
+RUN npx prisma generate
 RUN npm run build
 
 # ==========================================
@@ -23,21 +22,21 @@ RUN npm run build
 # ==========================================
 FROM node:26-alpine AS runner
 
+RUN apk add --no-cache openssl
+
 WORKDIR /usr/src/app
 
 ENV NODE_ENV=production
 
-# Copia apenas os arquivos de manifesto de pacotes
 COPY package*.json ./
+# Schema e migrations, necessários para o generate e o migrate deploy
+COPY prisma ./prisma
 
-# Instala APENAS as dependências de produção para reduzir o tamanho da imagem
-RUN npm ci --only=production
+RUN npm ci --omit=dev
+RUN npx prisma generate
 
-# Copia a pasta /dist gerada no estágio de build
 COPY --from=builder /usr/src/app/dist ./dist
 
-# Expõe a porta onde o Express escuta
 EXPOSE 3333
 
-# Comando para subir o servidor em produção
 CMD ["node", "dist/main/server.js"]
