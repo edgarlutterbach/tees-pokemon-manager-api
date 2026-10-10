@@ -1,7 +1,7 @@
-import { PgPokemonRepository } from '@infrastructure/database/postgres/pg-pokemon-repository';
-import { PgTrainerRepository } from '@infrastructure/database/postgres/pg-trainer-repository';
+import { PrismaPokemonRepository } from '@infrastructure/database/prisma/prisma-pokemon-repository';
+import { PrismaTrainerRepository } from '@infrastructure/database/prisma/prisma-trainer-repository';
 
-const pokemonRepository = new PgPokemonRepository();
-const trainerRepository = new PgTrainerRepository();
+const pokemonRepository = new PrismaPokemonRepository();
+const trainerRepository = new PrismaTrainerRepository();
 
 export { pokemonRepository, trainerRepository };
