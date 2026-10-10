@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { DomainError } from '@domain/errors/domain-error';
 import { ErrorCode } from '@domain/errors/error-code';
+import { RequestValidationError } from '@domain/errors/request-validation-error';
 
 const statusCodeByErrorCode: Record<ErrorCode, number> = {
   [ErrorCode.INVALID_ATTRIBUTES]: 400,
@@ -14,6 +15,15 @@ export function errorHandler(
   res: Response,
   _next: NextFunction,
 ): Response {
+  if (error instanceof RequestValidationError) {
+    return res.status(400).json({
+      status: 'error',
+      statusCode: 400,
+      message: error.message,
+      details: error.details,
+    });
+  }
+
   if (error instanceof DomainError) {
     const statusCode = statusCodeByErrorCode[error.code] ?? 400;
 
