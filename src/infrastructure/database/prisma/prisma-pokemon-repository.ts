@@ -2,7 +2,10 @@ import { Prisma, Pokemon as PokemonModel } from '@prisma/client';
 import { Pokemon } from '@domain/entities/pokemon';
 import { PokemonType } from '@domain/entities/pokemon-type';
 import { PokemonRarity } from '@domain/entities/pokemon-rarity';
-import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
+import {
+  PokemonFilters,
+  PokemonRepositoryContract,
+} from '@domain/repositories/pokemon-repository-contract';
 import { prisma } from './client';
 
 type PokemonData = Omit<Prisma.PokemonCreateInput, 'id' | 'createdAt'>;
@@ -26,11 +29,17 @@ export class PrismaPokemonRepository implements PokemonRepositoryContract {
     return row ? this.toEntity(row) : null;
   }
 
-  async findByType(type: string): Promise<Pokemon[]> {
+  async findByFilters({
+    type,
+    minLevel,
+    maxLevel,
+  }: PokemonFilters): Promise<Pokemon[]> {
     const rows = await prisma.pokemon.findMany({
       where: {
-        type: { equals: this.escapeLikePattern(type), mode: 'insensitive' },
+        type,
+        level: { gte: minLevel, lte: maxLevel },
       },
+      orderBy: { name: 'asc' },
     });
 
     return rows.map((row) => this.toEntity(row));

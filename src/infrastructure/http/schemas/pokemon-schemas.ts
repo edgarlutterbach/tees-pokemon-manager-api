@@ -56,3 +56,46 @@ export const createPokemonSchema = z.object({
 }) satisfies z.ZodType<CreatePokemonDTO>;
 
 export type CreatePokemonInput = z.infer<typeof createPokemonSchema>;
+
+const levelQueryParam = (field: string, fallback: number) =>
+  z
+    .string({ error: `O parâmetro ${field} deve ser informado uma única vez` })
+    .trim()
+    .regex(/^\d+$/, `O parâmetro ${field} deve ser um número inteiro`)
+    .transform(Number)
+    .pipe(
+      z
+        .number()
+        .min(
+          Pokemon.MIN_LEVEL,
+          `O parâmetro ${field} deve ser no mínimo ${Pokemon.MIN_LEVEL}`,
+        )
+        .max(
+          Pokemon.MAX_LEVEL,
+          `O parâmetro ${field} deve ser no máximo ${Pokemon.MAX_LEVEL}`,
+        ),
+    )
+    .default(fallback);
+
+export const listPokemonsQuerySchema = z
+  .object({
+    type: z
+      .string({ error: 'O parâmetro type deve ser informado uma única vez' })
+      .trim()
+      .toUpperCase()
+      .pipe(
+        z.enum(PokemonType, {
+          error: `O parâmetro type deve ser um dos valores: ${TYPES}`,
+        }),
+      )
+      .optional(),
+    minLevel: levelQueryParam('minLevel', Pokemon.MIN_LEVEL),
+    maxLevel: levelQueryParam('maxLevel', Pokemon.MAX_LEVEL),
+  })
+  .refine((query) => query.minLevel <= query.maxLevel, {
+    message: 'O parâmetro minLevel não pode ser maior que maxLevel',
+    path: ['minLevel'],
+    when: (payload) => payload.issues.length === 0,
+  });
+
+export type ListPokemonQuery = z.infer<typeof listPokemonsQuerySchema>;

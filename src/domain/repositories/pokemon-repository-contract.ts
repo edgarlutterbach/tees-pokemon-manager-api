@@ -1,10 +1,17 @@
-import { Pokemon } from '../entities/pokemon';
+import { Pokemon } from '@domain/entities/pokemon';
+import { PokemonType } from '@domain/entities/pokemon-type';
+
+export interface PokemonFilters {
+  type?: PokemonType;
+  minLevel?: number;
+  maxLevel?: number;
+}
 
 export interface PokemonRepositoryContract {
   create(pokemon: Pokemon): Promise<void>;
   findAll(): Promise<Pokemon[]>;
   findById(id: string): Promise<Pokemon | null>;
-  findByType(type: string): Promise<Pokemon[]>;
+  findByFilters(filters: PokemonFilters): Promise<Pokemon[]>;
   update(pokemon: Pokemon): Promise<void>;
   delete(id: string): Promise<void>;
   updateLevel(id: string, newLevel: number): Promise<void>;

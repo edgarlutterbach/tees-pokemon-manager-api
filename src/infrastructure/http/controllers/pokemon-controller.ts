@@ -7,6 +7,7 @@ import { DeletePokemonUseCase } from '@application/use-cases/delete-pokemon-use-
 import { GetPokemonStatsUseCase } from '@application/use-cases/get-pokemon-stats-use-case';
 import { UpdatePokemonLevelUseCase } from '@application/use-cases/update-pokemon-level-use-case';
 import { SearchPokemonsByNameUseCase } from '@application/use-cases/search-pokemons-by-name-use-case';
+import { ListPokemonQuery } from '@infrastructure/http/schemas/pokemon-schemas';
 
 export class PokemonController {
   private listUseCase: ListPokemonsUseCase;
@@ -39,9 +40,9 @@ export class PokemonController {
   }
 
   async list(req: Request, res: Response): Promise<Response> {
-    const type = req.query.type as string | undefined;
+    const filters = req.query as unknown as ListPokemonQuery;
 
-    const pokemons = await this.listUseCase.execute(type);
+    const pokemons = await this.listUseCase.execute(filters);
 
     return res.status(200).json(pokemons);
   }

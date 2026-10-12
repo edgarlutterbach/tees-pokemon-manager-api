@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { makePokemonController } from '@main/factories/make-pokemon-controller';
+import { validateRequest } from '@infrastructure/http/middlewares/validate-request';
+import { listPokemonsQuerySchema } from '@infrastructure/http/schemas/pokemon-schemas';
 
 const router = Router();
 const controller = makePokemonController();
@@ -13,23 +15,29 @@ router.get('/api/v1/pokemons/stats', (req, res) => {
   return controller.stats(req, res);
 });
 
-router.get('/api/v1/pokemons/search', (req, res) => {
-  /*
+router.get(
+  '/api/v1/pokemons',
+  validateRequest({ query: listPokemonsQuerySchema }),
+  (req, res) => {
+    /*
       #swagger.tags = ['Pokemons']
-      #swagger.summary = 'Busca Pokémons por nome parcial'
-      #swagger.description = 'Busca case-insensitive por parte do nome. Retorna os resultados e o total do catálogo.'
-      #swagger.parameters['name'] = { in: 'query', type: 'string', required: true, description: 'Termo de busca (ex: pika)' }
+      #swagger.summary = 'Lista os Pokémons do catálogo'
+      #swagger.description = 'Retorna o catálogo ordenado por nome, com filtros opcionais por tipo e faixa de nível.'
+      #swagger.parameters['type'] = { in: 'query', type: 'string', description: 'Tipo, sem diferenciar maiúsculas (FIRE, GRASS, WATER, ELECTRIC, PSYCHIC, POISON, FLYING)' }
+      #swagger.parameters['minLevel'] = { in: 'query', type: 'integer', description: 'Nível mínimo, de 1 a 100 (padrão: 1)' }
+      #swagger.parameters['maxLevel'] = { in: 'query', type: 'integer', description: 'Nível máximo, de 1 a 100 (padrão: 100)' }
       #swagger.responses[200] = {
-        description: 'Resultado da busca',
-        content: { 'application/json': { schema: { $ref: '#/definitions/SearchPokemonsResult' } } }
+        description: 'Lista de Pokémons',
+        content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/definitions/Pokemon' } } } }
       }
       #swagger.responses[400] = {
-        description: 'Termo de busca ausente',
-        content: { 'application/json': { schema: { $ref: '#/definitions/SearchBadRequestError' } } }
+        description: 'Parâmetros de busca inválidos',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ValidationError' } } }
       }
     */
-  return controller.searchByName(req, res);
-});
+    return controller.list(req, res);
+  },
+);
 
 router.get('/api/v1/pokemons', (req, res) => {
   /*

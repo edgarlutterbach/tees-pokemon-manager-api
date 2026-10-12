@@ -110,6 +110,17 @@ const doc = {
         },
       ],
     },
+    ValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'minLevel',
+          message: 'O parâmetro minLevel deve ser um número inteiro',
+        },
+      ],
+    },
     SearchBadRequestError: {
       status: 'error',
       statusCode: 400,

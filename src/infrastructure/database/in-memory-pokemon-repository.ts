@@ -1,5 +1,8 @@
 import { Pokemon } from '@domain/entities/pokemon';
-import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
+import {
+  PokemonFilters,
+  PokemonRepositoryContract,
+} from '@domain/repositories/pokemon-repository-contract';
 
 export class InMemoryPokemonRepository implements PokemonRepositoryContract {
   private pokemons: Pokemon[] = [];
@@ -21,10 +24,19 @@ export class InMemoryPokemonRepository implements PokemonRepositoryContract {
     return pokemon ?? null;
   }
 
-  async findByType(type: string): Promise<Pokemon[]> {
-    return this.pokemons.filter(
-      (p) => p.type.toLowerCase() === type.toLowerCase(),
-    );
+  async findByFilters({
+    type,
+    minLevel,
+    maxLevel,
+  }: PokemonFilters): Promise<Pokemon[]> {
+    return this.pokemons
+      .filter(
+        (p) =>
+          (type === undefined || p.type === type) &&
+          (minLevel === undefined || p.level >= minLevel) &&
+          (maxLevel === undefined || p.level <= maxLevel),
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   async searchByName(term: string): Promise<Pokemon[]> {
