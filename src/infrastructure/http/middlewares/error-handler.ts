@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { DomainError } from '@domain/errors/domain-error';
 import { ErrorCode } from '@domain/errors/error-code';
-import { RequestValidationError } from '@domain/errors/request-validation-error';
+import { RequestValidationError } from '@infrastructure/http/errors/request-validation-error';
 
 const statusCodeByErrorCode: Record<ErrorCode, number> = {
   [ErrorCode.INVALID_ATTRIBUTES]: 400,

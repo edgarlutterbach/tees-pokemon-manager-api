@@ -3,7 +3,7 @@ import { ZodType } from 'zod';
 import {
   RequestValidationError,
   ValidationIssue,
-} from '@domain/errors/request-validation-error';
+} from '@infrastructure/http/errors/request-validation-error';
 
 type RequestSource = 'body' | 'query' | 'params';
 
