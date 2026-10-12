@@ -1,14 +1,11 @@
 import { z } from 'zod';
 import { CreateTrainerDTO } from '@application/dtos/create-trainer-dto';
+import {
+  jsonBody,
+  typeError,
+} from '@infrastructure/http/schemas/schema-helpers';
 
-function typeError(field: string, expected: string) {
-  return (issue: { input?: unknown }) =>
-    issue.input === undefined
-      ? `O campo ${field} é obrigatório`
-      : `O campo ${field} deve ser ${expected}`;
-}
-
-export const createTrainerSchema = z.object({
+export const createTrainerSchema = jsonBody({
   name: z
     .string({ error: typeError('name', 'um texto') })
     .trim()

@@ -35,48 +35,6 @@
         }
       }
     },
-    "/api/v1/pokemons/search": {
-      "get": {
-        "tags": [
-          "Pokemons"
-        ],
-        "summary": "Busca Pokémons por nome parcial",
-        "description": "Busca case-insensitive por parte do nome. Retorna os resultados e o total do catálogo.",
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "required": true,
-            "description": "Termo de busca (ex: pika)",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Resultado da busca",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchPokemonsResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Termo de busca ausente",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchBadRequestError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/pokemons": {
       "get": {
         "tags": [
@@ -251,11 +209,11 @@
             "description": "Pokémon criado com sucesso"
           },
           "400": {
-            "description": "Dados inválidos",
+            "description": "Dados de entrada inválidos",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
+                  "$ref": "#/components/schemas/ValidationError"
                 }
               }
             }
@@ -364,11 +322,11 @@
             }
           },
           "400": {
-            "description": "Dados inválidos",
+            "description": "Dados de entrada inválidos",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TrainerBadRequestError"
+                  "$ref": "#/components/schemas/ValidationError"
                 }
               }
             }
@@ -474,6 +432,10 @@
           "nickname": {
             "type": "string",
             "example": "Pika"
+          },
+          "level": {
+            "type": "number",
+            "example": 25
           }
         },
         "required": [
@@ -516,6 +478,10 @@
           "nickname": {
             "type": "string",
             "example": "Rai"
+          },
+          "level": {
+            "type": "number",
+            "example": 25
           }
         }
       },
@@ -634,23 +600,6 @@
           }
         }
       },
-      "TrainerBadRequestError": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "example": "error"
-          },
-          "statusCode": {
-            "type": "number",
-            "example": 400
-          },
-          "message": {
-            "type": "string",
-            "example": "E-mail inválido."
-          }
-        }
-      },
       "TrainerConflictError": {
         "type": "object",
         "properties": {
@@ -723,6 +672,39 @@
                 "level": {
                   "type": "number",
                   "example": 25
+                }
+              }
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Dados de entrada inválidos"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "example": "minLevel"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "O parâmetro minLevel deve ser um número inteiro"
                 }
               }
             }

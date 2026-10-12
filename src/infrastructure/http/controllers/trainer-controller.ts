@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import { CreateTrainerUseCase } from '@application/use-cases/create-trainer-use-case';
 import { CreateTrainerDTO } from '@application/dtos/create-trainer-dto';
-import { DomainError } from '@domain/errors/domain-error';
-import { ErrorCode } from '@domain/errors/error-code';
 
 export class TrainerController {
   private createUseCase: CreateTrainerUseCase;
@@ -12,24 +10,10 @@ export class TrainerController {
   }
 
   async create(
-    req: Request<Record<string, never>, unknown, CreateTrainerDTO>,
+    req: Request<Request['params'], unknown, CreateTrainerDTO>,
     res: Response,
   ): Promise<Response> {
-    const { name, email, age, city } = req.body;
-
-    if (!name || !email || !city || age === undefined) {
-      throw new DomainError(
-        'Campos obrigatórios ausentes: name, email, age e city são necessários.',
-        ErrorCode.INVALID_ATTRIBUTES,
-      );
-    }
-
-    const trainer = await this.createUseCase.execute({
-      name,
-      email,
-      age,
-      city,
-    });
+    const trainer = await this.createUseCase.execute(req.body);
 
     return res.status(201).json({
       message: 'Treinador cadastrado com sucesso!',

@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import { makePokemonController } from '@main/factories/make-pokemon-controller';
 import { validateRequest } from '@infrastructure/http/middlewares/validate-request';
-import { listPokemonsQuerySchema } from '@infrastructure/http/schemas/pokemon-schemas';
+import {
+  createPokemonSchema,
+  listPokemonsQuerySchema,
+} from '@infrastructure/http/schemas/pokemon-schemas';
 
 const router = Router();
 const controller = makePokemonController();
@@ -70,8 +73,11 @@ router.get('/api/v1/pokemons/:id', (req, res) => {
   return controller.getById(req, res);
 });
 
-router.post('/api/v1/pokemons/', (req, res) => {
-  /*
+router.post(
+  '/api/v1/pokemons/',
+  validateRequest({ body: createPokemonSchema }),
+  (req, res) => {
+    /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Cadastra um novo Pokémon'
       #swagger.requestBody = {
@@ -80,16 +86,17 @@ router.post('/api/v1/pokemons/', (req, res) => {
       }
       #swagger.responses[201] = { description: 'Pokémon criado com sucesso' }
       #swagger.responses[400] = {
-        description: 'Dados inválidos',
-        content: { 'application/json': { schema: { $ref: '#/definitions/BadRequestError' } } }
+        description: 'Dados de entrada inválidos',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ValidationError' } } }
       }
       #swagger.responses[409] = {
         description: 'Já existe um Pokémon cadastrado com este ID',
         content: { 'application/json': { schema: { $ref: '#/definitions/ConflictError' } } }
-      } 
+      }
     */
-  return controller.create(req, res);
-});
+    return controller.create(req, res);
+  },
+);
 
 router.put('/api/v1/pokemons/:id', (req, res) => {
   /*

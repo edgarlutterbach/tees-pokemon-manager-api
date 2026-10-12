@@ -41,6 +41,7 @@ const doc = {
       $attack: 55,
       $defense: 40,
       nickname: 'Pika',
+      level: 25,
     },
     UpdatePokemonDto: {
       name: 'Raichu',
@@ -50,6 +51,7 @@ const doc = {
       attack: 65,
       defense: 45,
       nickname: 'Rai',
+      level: 25,
     },
     UpdatePokemonLevelDto: {
       $level: 25,
@@ -81,11 +83,6 @@ const doc = {
       status: 'error',
       statusCode: 409,
       message: 'Já existe um Pokémon cadastrado com este ID.',
-    },
-    TrainerBadRequestError: {
-      status: 'error',
-      statusCode: 400,
-      message: 'E-mail inválido.',
     },
     TrainerConflictError: {
       status: 'error',
