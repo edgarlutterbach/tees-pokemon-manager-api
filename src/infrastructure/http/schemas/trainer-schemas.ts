@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { CreateTrainerDTO } from '@application/dtos/create-trainer-dto';
+import { TrainerParams } from '@application/dtos/trainer-params';
 import {
   jsonBody,
   typeError,
@@ -29,3 +30,7 @@ export const createTrainerSchema = jsonBody({
 }) satisfies z.ZodType<CreateTrainerDTO>;
 
 export type CreateTrainerInput = z.infer<typeof createTrainerSchema>;
+
+export const trainerIdParamsSchema = z.object({
+  id: z.uuid({ error: 'O parâmetro id deve ser um UUID válido' }),
+}) satisfies z.ZodType<TrainerParams>;

@@ -10,6 +10,11 @@ const PRISMA_ERROR = {
   RECORD_NOT_FOUND: 'P2025',
 } as const;
 
+const NOT_FOUND_MESSAGES: Record<string, string> = {
+  Trainer: 'Treinador não encontrado no banco de dados',
+  Pokemon: 'Pokémon não encontrado no banco de dados',
+};
+
 export class PrismaErrorMapper {
   static toAppError(
     error: Prisma.PrismaClientKnownRequestError,
@@ -24,7 +29,9 @@ export class PrismaErrorMapper {
           'Relacionamento inválido. O recurso associado não existe',
         );
       case PRISMA_ERROR.RECORD_NOT_FOUND:
-        return new NotFoundError('Registro não encontrado no banco de dados');
+        return new NotFoundError(
+          this.describeMissingRecord(error.meta?.modelName),
+        );
       default:
         return null;
     }
@@ -36,5 +43,12 @@ export class PrismaErrorMapper {
     }
 
     return 'valor';
+  }
+
+  private static describeMissingRecord(modelName: unknown): string {
+    const message =
+      typeof modelName === 'string' ? NOT_FOUND_MESSAGES[modelName] : undefined;
+
+    return message ?? 'Registro não encontrado no banco de dados';
   }
 }

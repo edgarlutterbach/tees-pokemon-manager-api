@@ -28,6 +28,10 @@ export class PrismaTrainerRepository implements TrainerRepositoryContract {
     });
   }
 
+  async delete(id: string): Promise<void> {
+    await prisma.trainer.delete({ where: { id } });
+  }
+
   async findById(id: string): Promise<Trainer | null> {
     const row = await prisma.trainer.findUnique({ where: { id } });
 
