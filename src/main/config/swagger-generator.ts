@@ -60,7 +60,6 @@ const doc = {
       attack: 65,
       defense: 45,
       nickname: 'Rai',
-      level: 25,
     },
     UpdatePokemonLevelDto: {
       $level: 25,
@@ -151,6 +150,17 @@ const doc = {
         {
           field: 'trainerId',
           message: 'O campo trainerId deve ser um UUID válido',
+        },
+      ],
+    },
+    UpdatePokemonValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'name',
+          message: 'O campo name deve ser um texto',
         },
       ],
     },

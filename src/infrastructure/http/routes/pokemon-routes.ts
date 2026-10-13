@@ -4,6 +4,7 @@ import { validateRequest } from '@infrastructure/http/middlewares/validate-reque
 import {
   createPokemonSchema,
   listPokemonsQuerySchema,
+  updatePokemonSchema,
 } from '@infrastructure/http/schemas/pokemon-schemas';
 
 const router = Router();
@@ -86,8 +87,11 @@ router.post(
   },
 );
 
-router.put('/api/v1/pokemons/:id', (req, res) => {
-  /*
+router.put(
+  '/api/v1/pokemons/:id',
+  validateRequest({ body: updatePokemonSchema }),
+  (req, res) => {
+    /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Atualiza um Pokémon existente'
       #swagger.parameters['id'] = { description: 'ID do Pokémon' }
@@ -97,16 +101,17 @@ router.put('/api/v1/pokemons/:id', (req, res) => {
       }
       #swagger.responses[200] = { description: 'Pokémon atualizado com sucesso' }
       #swagger.responses[404] = {
-        description: 'Pokémon não encontrado',
+        description: 'Pokémon não encontrado no catálogo ou novo nome inexistente na PokéAPI',
         content: { 'application/json': { schema: { $ref: '#/definitions/NotFoundError' } } }
       }
       #swagger.responses[400] = {
-        description: 'Dados inválidos',
-        content: { 'application/json': { schema: { $ref: '#/definitions/BadRequestError' } } }
-      }  
+        description: 'Dados de entrada inválidos ou corpo sem campos para atualizar',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UpdatePokemonValidationError' } } }
+      }
     */
-  return controller.update(req, res);
-});
+    return controller.update(req, res);
+  },
+);
 
 router.patch('/api/v1/pokemons/:id/level', (req, res) => {
   /*

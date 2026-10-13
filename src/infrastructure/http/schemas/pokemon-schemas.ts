@@ -7,6 +7,7 @@ import {
   jsonBody,
   typeError,
 } from '@infrastructure/http/schemas/schema-helpers';
+import { UpdatePokemonDTO } from '@application/dtos/update-pokemon-dto';
 
 const TYPES = Object.values(PokemonType).join(', ');
 const RARITIES = Object.values(PokemonRarity).join(', ');
@@ -53,6 +54,22 @@ export const createPokemonSchema = jsonBody({
     .uuid({ error: 'O campo trainerId deve ser um UUID válido' })
     .optional(),
 }) satisfies z.ZodType<CreatePokemonDTO>;
+
+export const updatePokemonSchema = createPokemonSchema
+  .pick({
+    name: true,
+    type: true,
+    rarity: true,
+    hp: true,
+    attack: true,
+    defense: true,
+    nickname: true,
+  })
+  .partial()
+  .refine((body) => Object.keys(body).length > 0, {
+    message: 'Informe ao menos um campo para atualizar',
+    when: (payload) => payload.issues.length === 0,
+  }) satisfies z.ZodType<UpdatePokemonDTO>;
 
 export type CreatePokemonInput = z.infer<typeof createPokemonSchema>;
 
