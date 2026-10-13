@@ -78,6 +78,15 @@ export class PrismaPokemonRepository implements PokemonRepositoryContract {
     return prisma.pokemon.count({ where: { trainerId } });
   }
 
+  async findByTrainerId(trainerId: string): Promise<Pokemon[]> {
+    const rows = await prisma.pokemon.findMany({
+      where: { trainerId },
+      orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    });
+
+    return rows.map((row) => this.toEntity(row));
+  }
+
   async update(pokemon: Pokemon): Promise<void> {
     await prisma.pokemon.update({
       where: { id: pokemon.id },

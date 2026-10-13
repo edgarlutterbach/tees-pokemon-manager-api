@@ -62,6 +62,10 @@ export class InMemoryPokemonRepository implements PokemonRepositoryContract {
     return this.pokemons.filter((p) => p.trainerId === trainerId).length;
   }
 
+  async findByTrainerId(trainerId: string): Promise<Pokemon[]> {
+    return this.pokemons.filter((p) => p.trainerId === trainerId);
+  }
+
   async update(pokemon: Pokemon): Promise<void> {
     const index = this.pokemons.findIndex((p) => p.id === pokemon.id);
 

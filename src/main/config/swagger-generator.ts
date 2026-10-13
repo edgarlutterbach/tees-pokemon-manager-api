@@ -138,6 +138,25 @@ const doc = {
         },
       ],
     },
+    TrainerTeam: {
+      data: [{ $ref: '#/definitions/Pokemon' }],
+      meta: {
+        trainerId: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+        total: 1,
+        maxSize: 6,
+      },
+    },
+    TrainerScopedValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'trainerId',
+          message: 'O parâmetro trainerId deve ser um UUID válido',
+        },
+      ],
+    },
     SearchPokemonsResult: {
       term: 'pika',
       totalMatches: 1,

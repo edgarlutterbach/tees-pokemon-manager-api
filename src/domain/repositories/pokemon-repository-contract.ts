@@ -31,4 +31,5 @@ export interface PokemonRepositoryContract {
   searchByName(term: string): Promise<Pokemon[]>;
   count(): Promise<number>;
   countByTrainerId(trainerId: string): Promise<number>;
+  findByTrainerId(trainerId: string): Promise<Pokemon[]>;
 }

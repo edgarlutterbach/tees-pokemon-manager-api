@@ -4,6 +4,7 @@ import { validateRequest } from '@infrastructure/http/middlewares/validate-reque
 import {
   createTrainerSchema,
   trainerIdParamsSchema,
+  trainerScopedParamsSchema,
 } from '@infrastructure/http/schemas/trainer-schemas';
 
 const router = Router();
@@ -58,6 +59,32 @@ router.delete(
       }
     */
     return controller.delete(req, res);
+  },
+);
+
+router.get(
+  '/api/v1/trainers/:trainerId/team',
+  validateRequest({ params: trainerScopedParamsSchema }),
+  (req, res) => {
+    /*
+      #swagger.tags = ['Trainers']
+      #swagger.summary = 'Lista o time atual do Treinador'
+      #swagger.description = 'Retorna os Pokémons associados ao treinador, na ordem em que foram capturados. O time tem no máximo 6 Pokémons.'
+      #swagger.parameters['trainerId'] = { description: 'ID (UUID) do Treinador' }
+      #swagger.responses[200] = {
+        description: 'Time do treinador, que pode estar vazio',
+        content: { 'application/json': { schema: { $ref: '#/definitions/TrainerTeam' } } }
+      }
+      #swagger.responses[400] = {
+        description: 'ID em formato inválido',
+        content: { 'application/json': { schema: { $ref: '#/definitions/TrainerScopedValidationError' } } }
+      }
+      #swagger.responses[404] = {
+        description: 'Treinador não encontrado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/TrainerNotFoundError' } } }
+      }
+    */
+    return controller.team(req, res);
   },
 );
 
