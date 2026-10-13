@@ -1,5 +1,6 @@
 import {
   ExternalPokemonDetails,
+  ExternalSpeciesDetails,
   PokemonExternalGateway,
 } from '@domain/gateways/pokemon-external-gateway';
 
@@ -12,6 +13,7 @@ const CATALOG: ReadonlyMap<string, ExternalPokemonDetails> = new Map([
     {
       pokedexNumber: 1,
       name: 'bulbasaur',
+      speciesName: 'bulbasaur',
       types: ['GRASS', 'POISON'],
       hp: 45,
       attack: 49,
@@ -27,6 +29,7 @@ const CATALOG: ReadonlyMap<string, ExternalPokemonDetails> = new Map([
     {
       pokedexNumber: 4,
       name: 'charmander',
+      speciesName: 'charmander',
       types: ['FIRE'],
       hp: 39,
       attack: 52,
@@ -42,6 +45,7 @@ const CATALOG: ReadonlyMap<string, ExternalPokemonDetails> = new Map([
     {
       pokedexNumber: 25,
       name: 'pikachu',
+      speciesName: 'pikachu',
       types: ['ELECTRIC'],
       hp: 35,
       attack: 55,
@@ -57,6 +61,7 @@ const CATALOG: ReadonlyMap<string, ExternalPokemonDetails> = new Map([
     {
       pokedexNumber: 26,
       name: 'raichu',
+      speciesName: 'raichu',
       types: ['ELECTRIC'],
       hp: 60,
       attack: 90,
@@ -69,11 +74,29 @@ const CATALOG: ReadonlyMap<string, ExternalPokemonDetails> = new Map([
   ],
 ]);
 
+const SPECIES: ReadonlyMap<string, ExternalSpeciesDetails> = new Map([
+  ['bulbasaur', { isLegendary: false, isMythical: false, captureRate: 45 }],
+  ['charmander', { isLegendary: false, isMythical: false, captureRate: 45 }],
+  ['pikachu', { isLegendary: false, isMythical: false, captureRate: 190 }],
+  ['raichu', { isLegendary: false, isMythical: false, captureRate: 75 }],
+]);
+
 export class InMemoryPokemonGateway implements PokemonExternalGateway {
   async findByName(name: string): Promise<ExternalPokemonDetails | null> {
-    const slug = name.trim().toLowerCase().replace(/\s+/g, '-');
-    const details = CATALOG.get(slug);
+    const details = CATALOG.get(this.toSlug(name));
 
     return details ? { ...details, types: [...details.types] } : null;
+  }
+
+  async findSpeciesByName(
+    name: string,
+  ): Promise<ExternalSpeciesDetails | null> {
+    const species = SPECIES.get(this.toSlug(name));
+
+    return species ? { ...species } : null;
+  }
+
+  private toSlug(name: string): string {
+    return name.trim().toLowerCase().replace(/\s+/g, '-');
   }
 }

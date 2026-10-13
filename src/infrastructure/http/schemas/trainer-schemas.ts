@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { CreateTrainerDTO } from '@application/dtos/create-trainer-dto';
-import { TrainerParams, TrainerScopedParams } from '@application/dtos/trainer-params';
+import { CapturePokemonDTO } from '@application/dtos/capture-pokemon-dto';
+import {
+  TrainerParams,
+  TrainerScopedParams,
+} from '@application/dtos/trainer-params';
 import {
   jsonBody,
   typeError,
@@ -38,3 +42,19 @@ export const trainerIdParamsSchema = z.object({
 export const trainerScopedParamsSchema = z.object({
   trainerId: z.uuid({ error: 'O parâmetro trainerId deve ser um UUID válido' }),
 }) satisfies z.ZodType<TrainerScopedParams>;
+
+export const capturePokemonSchema = jsonBody({
+  name: z
+    .string({ error: typeError('name', 'um texto') })
+    .trim()
+    .min(1, 'O nome não pode ser vazio')
+    .max(100, 'O nome deve ter no máximo 100 caracteres'),
+  nickname: z
+    .string({ error: typeError('nickname', 'um texto') })
+    .trim()
+    .min(1, 'O apelido não pode ser vazio')
+    .max(100, 'O apelido deve ter no máximo 100 caracteres')
+    .optional(),
+}) satisfies z.ZodType<Omit<CapturePokemonDTO, 'trainerId'>>;
+
+export type CapturePokemonInput = z.infer<typeof capturePokemonSchema>;

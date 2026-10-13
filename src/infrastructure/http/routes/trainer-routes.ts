@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { makeTrainerController } from '@main/factories/make-trainer-controller';
 import { validateRequest } from '@infrastructure/http/middlewares/validate-request';
 import {
+  capturePokemonSchema,
   createTrainerSchema,
   trainerIdParamsSchema,
   trainerScopedParamsSchema,
@@ -85,6 +86,47 @@ router.get(
       }
     */
     return controller.team(req, res);
+  },
+);
+
+router.post(
+  '/api/v1/trainers/:trainerId/captures',
+  validateRequest({
+    params: trainerScopedParamsSchema,
+    body: capturePokemonSchema,
+  }),
+  (req, res) => {
+    /*
+      #swagger.tags = ['Trainers']
+      #swagger.summary = 'Captura um Pokémon para o time do Treinador'
+      #swagger.description = 'Consulta a PokéAPI para obter tipo principal, atributos base, imagem e raridade. A raridade é LEGENDARY para lendários e míticos, RARE para capture_rate até 45 e COMMON nos demais casos. O time tem no máximo 6 Pokémons.'
+      #swagger.parameters['trainerId'] = { description: 'ID (UUID) do Treinador' }
+      #swagger.requestBody = {
+        required: true,
+        content: { 'application/json': { schema: { $ref: '#/definitions/CapturePokemonDto' } } }
+      }
+      #swagger.responses[201] = {
+        description: 'Pokémon capturado e adicionado ao time',
+        content: { 'application/json': { schema: { $ref: '#/definitions/CapturedPokemon' } } }
+      }
+      #swagger.responses[400] = {
+        description: 'trainerId inválido ou corpo da requisição inválido',
+        content: { 'application/json': { schema: { $ref: '#/definitions/CapturePokemonValidationError' } } }
+      }
+      #swagger.responses[404] = {
+        description: 'Treinador não encontrado ou nome inexistente na PokéAPI',
+        content: { 'application/json': { schema: { $ref: '#/definitions/PokeApiNotFoundError' } } }
+      }
+      #swagger.responses[409] = {
+        description: 'Time do treinador já possui 6 Pokémons',
+        content: { 'application/json': { schema: { $ref: '#/definitions/TeamFullError' } } }
+      }
+      #swagger.responses[503] = {
+        description: 'PokéAPI indisponível ou sem resposta em 3 segundos',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ServiceUnavailableError' } } }
+      }
+    */
+    return controller.capture(req, res);
   },
 );
 

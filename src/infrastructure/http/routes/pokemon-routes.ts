@@ -29,7 +29,7 @@ router.get(
       #swagger.description = 'Retorna o catálogo ordenado por nome, com paginação e filtros opcionais por tipo e faixa de nível.'
       #swagger.parameters['page'] = { in: 'query', type: 'integer', description: 'Número da página, a partir de 1 (padrão: 1)' }
       #swagger.parameters['limit'] = { in: 'query', type: 'integer', description: 'Itens por página, de 1 a 50 (padrão: 10)' }
-      #swagger.parameters['type'] = { in: 'query', type: 'string', description: 'Tipo, sem diferenciar maiúsculas (FIRE, GRASS, WATER, ELECTRIC, PSYCHIC, POISON, FLYING)' }
+      #swagger.parameters['type'] = { in: 'query', type: 'string', description: 'Um dos 18 tipos oficiais, sem diferenciar maiúsculas (ex: FIRE, WATER, NORMAL)' }
       #swagger.parameters['minLevel'] = { in: 'query', type: 'integer', description: 'Nível mínimo, de 1 a 100 (padrão: 1)' }
       #swagger.parameters['maxLevel'] = { in: 'query', type: 'integer', description: 'Nível máximo, de 1 a 100 (padrão: 100)' }
       #swagger.responses[200] = {

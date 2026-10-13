@@ -138,6 +138,47 @@ const doc = {
         },
       ],
     },
+    CapturePokemonDto: {
+      $name: 'charmander',
+      nickname: 'Chama',
+    },
+    CapturedPokemon: {
+      message: 'Pokémon capturado com sucesso!',
+      data: {
+        id: '9b1f3c2e-7d4a-4f6b-8e2c-5a1d3f7b9c0e',
+        name: 'Charmander',
+        type: 'FIRE',
+        rarity: 'RARE',
+        hp: 39,
+        attack: 52,
+        defense: 43,
+        nickname: 'Chama',
+        level: 1,
+        trainerId: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+        spriteUrl:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+        baseExperience: 62,
+        height: 6,
+        weight: 85,
+      },
+    },
+    CapturePokemonValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'name',
+          message: 'O campo name é obrigatório',
+        },
+      ],
+    },
+    TeamFullError: {
+      status: 'error',
+      statusCode: 409,
+      message:
+        'O treinador já possui o limite máximo de 6 Pokémons em seu time',
+    },
     TrainerTeam: {
       data: [{ $ref: '#/definitions/Pokemon' }],
       meta: {
