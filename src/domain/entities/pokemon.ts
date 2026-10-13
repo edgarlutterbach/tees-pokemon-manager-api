@@ -12,6 +12,7 @@ interface PokemonProps {
   defense: number;
   nickname?: string;
   level?: number;
+  trainerId?: string;
 }
 
 export class Pokemon {
@@ -26,6 +27,7 @@ export class Pokemon {
   private readonly _defense: number;
   private readonly _nickname?: string;
   private readonly _level: number;
+  private readonly _trainerId?: string;
 
   constructor(props: PokemonProps) {
     if (props.hp <= 0) {
@@ -59,6 +61,7 @@ export class Pokemon {
     this._defense = props.defense;
     this._nickname = props.nickname;
     this._level = level;
+    this._trainerId = props.trainerId;
   }
 
   get id(): string {
@@ -97,6 +100,10 @@ export class Pokemon {
     return this._level;
   }
 
+  get trainerId(): string | undefined {
+    return this._trainerId;
+  }
+
   withLevel(newLevel: number): Pokemon {
     return new Pokemon({
       id: this._id,
@@ -108,6 +115,7 @@ export class Pokemon {
       defense: this._defense,
       nickname: this._nickname,
       level: newLevel,
+      trainerId: this._trainerId,
     });
   }
 
@@ -122,6 +130,7 @@ export class Pokemon {
       defense: this._defense,
       nickname: this._nickname,
       level: this._level,
+      trainerId: this._trainerId ?? null,
     };
   }
 }

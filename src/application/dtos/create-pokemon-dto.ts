@@ -11,4 +11,5 @@ export interface CreatePokemonDTO {
   defense: number;
   nickname?: string;
   level?: number;
+  trainerId?: string;
 }

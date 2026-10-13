@@ -49,6 +49,9 @@ export const createPokemonSchema = jsonBody({
     .min(Pokemon.MIN_LEVEL, `O nível deve ser no mínimo ${Pokemon.MIN_LEVEL}`)
     .max(Pokemon.MAX_LEVEL, `O nível deve ser no máximo ${Pokemon.MAX_LEVEL}`)
     .optional(),
+  trainerId: z
+    .uuid({ error: 'O campo trainerId deve ser um UUID válido' })
+    .optional(),
 }) satisfies z.ZodType<CreatePokemonDTO>;
 
 export type CreatePokemonInput = z.infer<typeof createPokemonSchema>;

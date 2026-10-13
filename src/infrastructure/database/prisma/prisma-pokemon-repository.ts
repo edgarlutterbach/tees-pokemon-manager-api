@@ -8,7 +8,7 @@ import {
 } from '@domain/repositories/pokemon-repository-contract';
 import { prisma } from './client';
 
-type PokemonData = Omit<Prisma.PokemonCreateInput, 'id' | 'createdAt'>;
+type PokemonData = Omit<Prisma.PokemonUncheckedCreateInput, 'id' | 'createdAt'>;
 
 export class PrismaPokemonRepository implements PokemonRepositoryContract {
   async create(pokemon: Pokemon): Promise<void> {
@@ -95,6 +95,7 @@ export class PrismaPokemonRepository implements PokemonRepositoryContract {
       defense: pokemon.defense,
       nickname: pokemon.nickname ?? null,
       level: pokemon.level,
+      trainerId: pokemon.trainerId ?? null,
     };
   }
 
@@ -109,6 +110,7 @@ export class PrismaPokemonRepository implements PokemonRepositoryContract {
       defense: row.defense,
       nickname: row.nickname ?? undefined,
       level: row.level,
+      trainerId: row.trainerId ?? undefined,
     });
   }
 }
