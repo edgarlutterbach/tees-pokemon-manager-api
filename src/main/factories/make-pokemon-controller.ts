@@ -1,4 +1,5 @@
 import { pokemonRepository } from './repositories';
+import { pokemonExternalGateway } from './gateways';
 import { ListPokemonsUseCase } from '@application/use-cases/list-pokemons-use-case';
 import { PokemonController } from '@infrastructure/http/controllers/pokemon-controller';
 import { GetPokemonByIdUseCase } from '@application/use-cases/get-pokemon-by-id-use-case';
@@ -8,22 +9,8 @@ import { DeletePokemonUseCase } from '@application/use-cases/delete-pokemon-use-
 import { GetPokemonStatsUseCase } from '@application/use-cases/get-pokemon-stats-use-case';
 import { UpdatePokemonLevelUseCase } from '@application/use-cases/update-pokemon-level-use-case';
 import { SearchPokemonsByNameUseCase } from '@application/use-cases/search-pokemons-by-name-use-case';
-import { PokeApiAxiosGateway } from '@infrastructure/gateways/poke-api-axios-gateway';
-import { InMemoryPokemonGateway } from '@infrastructure/gateways/in-memory-pokemon-gateway';
-import { PokemonExternalGateway } from '@domain/gateways/pokemon-external-gateway';
-
-function makePokemonExternalGateway(): PokemonExternalGateway {
-  if (process.env.USE_EXTERNAL_API === 'false') {
-    console.log('[gateway]: PokéAPI simulada em memória (modo offline)');
-    return new InMemoryPokemonGateway();
-  }
-
-  console.log('[gateway]: PokéAPI oficial (modo integrado)');
-  return new PokeApiAxiosGateway();
-}
 
 export function makePokemonController(): PokemonController {
-  const pokemonExternalGateway = makePokemonExternalGateway();
   const listUseCase = new ListPokemonsUseCase(pokemonRepository);
   const getByIdUseCase = new GetPokemonByIdUseCase(pokemonRepository);
   const createUseCase = new CreatePokemonUseCase(

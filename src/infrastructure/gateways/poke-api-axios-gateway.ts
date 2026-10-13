@@ -5,6 +5,31 @@ import {
 } from '@domain/gateways/pokemon-external-gateway';
 import { ServiceUnavailableError } from '@domain/errors/service-unavailable-error';
 
+type PokeApiStatName = 'hp' | 'attack' | 'defense';
+
+interface PokeApiPokemonResponse {
+  id: number;
+  name: string;
+  base_experience: number | null;
+  height: number;
+  weight: number;
+  types: {
+    slot: number;
+    type: { name: string };
+  }[];
+  stats: {
+    base_stat: number;
+    stat: { name: string };
+  }[];
+  sprites: {
+    other?: {
+      'official-artwork'?: {
+        front_default: string | null;
+      };
+    };
+  };
+}
+
 interface PokeApiPokemonResponse {
   base_experience: number | null;
   height: number;
@@ -66,10 +91,33 @@ export class PokeApiAxiosGateway implements PokemonExternalGateway {
     const officialArtwork = raw.sprites.other?.['official-artwork'];
 
     return {
+      pokedexNumber: raw.id,
+      name: raw.name,
+      types: [...raw.types]
+        .sort((a, b) => a.slot - b.slot)
+        .map((entry) => entry.type.name.toUpperCase()),
+      hp: this.findBaseStat(raw, 'hp'),
+      attack: this.findBaseStat(raw, 'attack'),
+      defense: this.findBaseStat(raw, 'defense'),
       spriteUrl: officialArtwork?.front_default ?? null,
       baseExperience: raw.base_experience ?? null,
       height: raw.height,
       weight: raw.weight,
     };
+  }
+
+  private findBaseStat(
+    raw: PokeApiPokemonResponse,
+    statName: PokeApiStatName,
+  ): number {
+    const entry = raw.stats.find((item) => item.stat.name === statName);
+
+    if (!entry) {
+      throw new Error(
+        `[PokeAPI]: atributo "${statName}" ausente na resposta de "${raw.name}"`,
+      );
+    }
+
+    return entry.base_stat;
   }
 }

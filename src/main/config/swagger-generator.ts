@@ -19,6 +19,10 @@ const doc = {
       name: 'Trainers',
       description: 'Endpoints de gerenciamento de Treinadores',
     },
+    {
+      name: 'Pokedex',
+      description: 'Consultas diretas à PokéAPI oficial',
+    },
   ],
   definitions: {
     Pokemon: {
@@ -184,6 +188,32 @@ const doc = {
         },
       ],
     },
+    PokedexEntry: {
+      pokedexNumber: 25,
+      name: 'pikachu',
+      types: ['ELECTRIC'],
+      spriteUrl:
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
+      baseExperience: 112,
+      height: 4,
+      weight: 60,
+      stats: {
+        hp: 35,
+        attack: 55,
+        defense: 40,
+      },
+    },
+    PokedexSearchValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'name',
+          message: 'O parâmetro name é obrigatório',
+        },
+      ],
+    },
     SearchBadRequestError: {
       status: 'error',
       statusCode: 400,
@@ -197,6 +227,7 @@ const outputFile = path.resolve(__dirname, 'swagger-output.json');
 const endpointsFiles = [
   path.resolve(__dirname, '../../infrastructure/http/routes/pokemon-routes.ts'),
   path.resolve(__dirname, '../../infrastructure/http/routes/trainer-routes.ts'),
+  path.resolve(__dirname, '../../infrastructure/http/routes/pokedex-routes.ts'),
 ];
 
 swaggerAutogen({ openapi: '3.0.0' })(outputFile, endpointsFiles, doc);
