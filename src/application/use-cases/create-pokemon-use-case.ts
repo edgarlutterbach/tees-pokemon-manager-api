@@ -1,14 +1,21 @@
 import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
+import { PokemonExternalGateway } from '@domain/gateways/pokemon-external-gateway';
 import { CreatePokemonDTO } from '@application/dtos/create-pokemon-dto';
 import { Pokemon } from '@domain/entities/pokemon';
 import { Trainer } from '@domain/entities/trainer';
 import { ConflictError } from '@domain/errors/conflict-error';
+import { NotFoundError } from '@domain/errors/not-found-error';
 
 export class CreatePokemonUseCase {
   private repository: PokemonRepositoryContract;
+  private externalGateway: PokemonExternalGateway;
 
-  constructor(repository: PokemonRepositoryContract) {
+  constructor(
+    repository: PokemonRepositoryContract,
+    externalGateway: PokemonExternalGateway,
+  ) {
     this.repository = repository;
+    this.externalGateway = externalGateway;
   }
 
   async execute(data: CreatePokemonDTO): Promise<Pokemon> {
@@ -18,11 +25,25 @@ export class CreatePokemonUseCase {
       throw new ConflictError('Já existe um Pokémon cadastrado com este ID.');
     }
 
-    const novoPokemon = new Pokemon(data);
-
-    if (novoPokemon.trainerId) {
-      await this.ensureTeamHasRoom(novoPokemon.trainerId);
+    if (data.trainerId) {
+      await this.ensureTeamHasRoom(data.trainerId);
     }
+
+    const externalDetails = await this.externalGateway.findByName(data.name);
+
+    if (!externalDetails) {
+      throw new NotFoundError(
+        'Pokémon não encontrado na base oficial da PokeAPI',
+      );
+    }
+
+    const novoPokemon = new Pokemon({
+      ...data,
+      spriteUrl: externalDetails.spriteUrl ?? undefined,
+      baseExperience: externalDetails.baseExperience ?? undefined,
+      height: externalDetails.height,
+      weight: externalDetails.weight,
+    });
 
     await this.repository.create(novoPokemon);
 

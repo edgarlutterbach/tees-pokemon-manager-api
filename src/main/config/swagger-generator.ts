@@ -31,6 +31,16 @@ const doc = {
       defense: 40,
       nickname: 'Pika',
       level: 25,
+      trainerId: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+      spriteUrl:
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
+      baseExperience: 112,
+      height: 4,
+      weight: 60,
+    },
+    CreatedPokemon: {
+      message: 'Pokémon cadastrado com sucesso!',
+      data: { $ref: '#/definitions/Pokemon' },
     },
     PaginatedPokemons: {
       data: [{ $ref: '#/definitions/Pokemon' }],
@@ -87,6 +97,11 @@ const doc = {
       statusCode: 404,
       message: 'Pokémon não encontrado no catálogo.',
     },
+    PokeApiNotFoundError: {
+      status: 'error',
+      statusCode: 404,
+      message: 'Pokémon não encontrado na base oficial da PokeAPI',
+    },
     ConflictError: {
       status: 'error',
       statusCode: 409,
@@ -117,19 +132,7 @@ const doc = {
       term: 'pika',
       totalMatches: 1,
       totalCatalog: 6,
-      data: [
-        {
-          id: '25',
-          name: 'Pikachu',
-          type: 'ELECTRIC',
-          rarity: 'RARE',
-          hp: 35,
-          attack: 55,
-          defense: 40,
-          nickname: 'Pika',
-          level: 25,
-        },
-      ],
+      data: [{ $ref: '#/definitions/Pokemon' }],
     },
     ListPokemonsValidationError: {
       status: 'error',

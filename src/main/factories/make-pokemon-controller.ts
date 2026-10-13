@@ -8,12 +8,20 @@ import { DeletePokemonUseCase } from '@application/use-cases/delete-pokemon-use-
 import { GetPokemonStatsUseCase } from '@application/use-cases/get-pokemon-stats-use-case';
 import { UpdatePokemonLevelUseCase } from '@application/use-cases/update-pokemon-level-use-case';
 import { SearchPokemonsByNameUseCase } from '@application/use-cases/search-pokemons-by-name-use-case';
+import { PokeApiAxiosGateway } from '@infrastructure/gateways/poke-api-axios-gateway';
 
 export function makePokemonController(): PokemonController {
+  const pokemonExternalGateway = new PokeApiAxiosGateway();
   const listUseCase = new ListPokemonsUseCase(pokemonRepository);
   const getByIdUseCase = new GetPokemonByIdUseCase(pokemonRepository);
-  const createUseCase = new CreatePokemonUseCase(pokemonRepository);
-  const updateUseCase = new UpdatePokemonUseCase(pokemonRepository);
+  const createUseCase = new CreatePokemonUseCase(
+    pokemonRepository,
+    pokemonExternalGateway,
+  );
+  const updateUseCase = new UpdatePokemonUseCase(
+    pokemonRepository,
+    pokemonExternalGateway,
+  );
   const deleteUseCase = new DeletePokemonUseCase(pokemonRepository);
   const statsUseCase = new GetPokemonStatsUseCase(pokemonRepository);
   const updateLevelUseCase = new UpdatePokemonLevelUseCase(pokemonRepository);

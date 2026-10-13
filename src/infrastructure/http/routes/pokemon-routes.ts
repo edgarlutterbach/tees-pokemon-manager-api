@@ -69,14 +69,22 @@ router.post(
     /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Cadastra um novo Pokémon'
+      #swagger.description = 'O nome é consultado na PokéAPI oficial, que fornece spriteUrl, baseExperience, height (decímetros) e weight (hectogramas). Esses quatro campos não são aceitos no corpo.'
       #swagger.requestBody = {
         required: true,
         content: { 'application/json': { schema: { $ref: '#/definitions/CreatePokemonDto' } } }
       }
-      #swagger.responses[201] = { description: 'Pokémon criado com sucesso' }
+      #swagger.responses[201] = {
+        description: 'Pokémon criado e enriquecido com os dados da PokéAPI',
+        content: { 'application/json': { schema: { $ref: '#/definitions/CreatedPokemon' } } }
+      }
       #swagger.responses[400] = {
         description: 'Dados de entrada inválidos',
         content: { 'application/json': { schema: { $ref: '#/definitions/CreatePokemonValidationError' } } }
+      }
+      #swagger.responses[404] = {
+        description: 'Nome não encontrado na base oficial da PokéAPI',
+        content: { 'application/json': { schema: { $ref: '#/definitions/PokeApiNotFoundError' } } }
       }
       #swagger.responses[409] = {
         description: 'ID de Pokémon já cadastrado ou time do treinador completo (máximo de 6)',

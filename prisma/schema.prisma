@@ -20,6 +20,10 @@ model Pokemon {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   trainerId String?  @map("trainer_id") @db.Uuid
   trainer   Trainer? @relation(fields: [trainerId], references: [id], onDelete: SetNull)
+  spriteUrl      String? @map("sprite_url") @db.VarChar(255)
+  baseExperience Int?    @map("base_experience")
+  height         Int?
+  weight         Int?
 
   @@index([trainerId])
   @@map("pokemons")

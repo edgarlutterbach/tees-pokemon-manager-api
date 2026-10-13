@@ -13,6 +13,10 @@ interface PokemonProps {
   nickname?: string;
   level?: number;
   trainerId?: string;
+  spriteUrl?: string;
+  baseExperience?: number;
+  height?: number;
+  weight?: number;
 }
 
 export class Pokemon {
@@ -28,6 +32,10 @@ export class Pokemon {
   private readonly _nickname?: string;
   private readonly _level: number;
   private readonly _trainerId?: string;
+  private readonly _spriteUrl?: string;
+  private readonly _baseExperience?: number;
+  private readonly _height?: number;
+  private readonly _weight?: number;
 
   constructor(props: PokemonProps) {
     if (props.hp <= 0) {
@@ -62,6 +70,10 @@ export class Pokemon {
     this._nickname = props.nickname;
     this._level = level;
     this._trainerId = props.trainerId;
+    this._spriteUrl = props.spriteUrl;
+    this._baseExperience = props.baseExperience;
+    this._height = props.height;
+    this._weight = props.weight;
   }
 
   get id(): string {
@@ -104,6 +116,22 @@ export class Pokemon {
     return this._trainerId;
   }
 
+  get spriteUrl(): string | undefined {
+    return this._spriteUrl;
+  }
+
+  get baseExperience(): number | undefined {
+    return this._baseExperience;
+  }
+
+  get height(): number | undefined {
+    return this._height;
+  }
+
+  get weight(): number | undefined {
+    return this._weight;
+  }
+
   withLevel(newLevel: number): Pokemon {
     return new Pokemon({
       id: this._id,
@@ -116,6 +144,10 @@ export class Pokemon {
       nickname: this._nickname,
       level: newLevel,
       trainerId: this._trainerId,
+      spriteUrl: this._spriteUrl,
+      baseExperience: this._baseExperience,
+      height: this._height,
+      weight: this._weight,
     });
   }
 
@@ -131,6 +163,10 @@ export class Pokemon {
       nickname: this._nickname,
       level: this._level,
       trainerId: this._trainerId ?? null,
+      spriteUrl: this._spriteUrl ?? null,
+      baseExperience: this._baseExperience ?? null,
+      height: this._height ?? null,
+      weight: this._weight ?? null,
     };
   }
 }

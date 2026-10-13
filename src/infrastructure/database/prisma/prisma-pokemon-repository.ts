@@ -111,6 +111,10 @@ export class PrismaPokemonRepository implements PokemonRepositoryContract {
       nickname: pokemon.nickname ?? null,
       level: pokemon.level,
       trainerId: pokemon.trainerId ?? null,
+      spriteUrl: pokemon.spriteUrl ?? null,
+      baseExperience: pokemon.baseExperience ?? null,
+      height: pokemon.height ?? null,
+      weight: pokemon.weight ?? null,
     };
   }
 
@@ -126,6 +130,10 @@ export class PrismaPokemonRepository implements PokemonRepositoryContract {
       nickname: row.nickname ?? undefined,
       level: row.level,
       trainerId: row.trainerId ?? undefined,
+      spriteUrl: row.spriteUrl ?? undefined,
+      baseExperience: row.baseExperience ?? undefined,
+      height: row.height ?? undefined,
+      weight: row.weight ?? undefined,
     });
   }
 }
