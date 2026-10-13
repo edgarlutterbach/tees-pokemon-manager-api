@@ -90,6 +90,10 @@ router.post(
         description: 'ID de Pokémon já cadastrado ou time do treinador completo (máximo de 6)',
         content: { 'application/json': { schema: { $ref: '#/definitions/ConflictError' } } }
       }
+      #swagger.responses[503] = {
+        description: 'PokéAPI indisponível ou sem resposta em 3 segundos',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ServiceUnavailableError' } } }
+      }
     */
     return controller.create(req, res);
   },
@@ -115,6 +119,10 @@ router.put(
       #swagger.responses[400] = {
         description: 'Dados de entrada inválidos ou corpo sem campos para atualizar',
         content: { 'application/json': { schema: { $ref: '#/definitions/UpdatePokemonValidationError' } } }
+      }
+      #swagger.responses[503] = {
+        description: 'PokéAPI indisponível ou sem resposta em 3 segundos',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ServiceUnavailableError' } } }
       }
     */
     return controller.update(req, res);

@@ -189,6 +189,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "PokéAPI indisponível ou sem resposta em 3 segundos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailableError"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -280,6 +290,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ConflictError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "PokéAPI indisponível ou sem resposta em 3 segundos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailableError"
                 }
               }
             }
@@ -758,6 +778,23 @@
           "message": {
             "type": "string",
             "example": "Pokémon não encontrado na base oficial da PokeAPI"
+          }
+        }
+      },
+      "ServiceUnavailableError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 503
+          },
+          "message": {
+            "type": "string",
+            "example": "O serviço externo da PokeAPI está temporariamente indisponível. Tente novamente mais tarde"
           }
         }
       },

@@ -102,6 +102,12 @@ const doc = {
       statusCode: 404,
       message: 'Pokémon não encontrado na base oficial da PokeAPI',
     },
+    ServiceUnavailableError: {
+      status: 'error',
+      statusCode: 503,
+      message:
+        'O serviço externo da PokeAPI está temporariamente indisponível. Tente novamente mais tarde',
+    },
     ConflictError: {
       status: 'error',
       statusCode: 409,

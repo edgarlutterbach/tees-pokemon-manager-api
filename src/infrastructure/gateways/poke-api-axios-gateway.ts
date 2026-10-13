@@ -3,6 +3,7 @@ import {
   ExternalPokemonDetails,
   PokemonExternalGateway,
 } from '@domain/gateways/pokemon-external-gateway';
+import { ServiceUnavailableError } from '@domain/errors/service-unavailable-error';
 
 interface PokeApiPokemonResponse {
   base_experience: number | null;
@@ -22,6 +23,7 @@ const POKE_API_SLUG = /^[a-z0-9-]+$/;
 export class PokeApiAxiosGateway implements PokemonExternalGateway {
   private readonly http: AxiosInstance = axios.create({
     baseURL: 'https://pokeapi.co/api/v2',
+    timeout: 3000,
   });
 
   async findByName(name: string): Promise<ExternalPokemonDetails | null> {
@@ -38,11 +40,21 @@ export class PokeApiAxiosGateway implements PokemonExternalGateway {
 
       return this.toDomain(data);
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
+      if (!axios.isAxiosError(error)) {
+        throw error;
+      }
+
+      if (error.response?.status === 404) {
         return null;
       }
 
-      throw error;
+      console.error(
+        `[PokeAPI]: falha na consulta de "${slug}" (código: ${error.code}, status: ${error.response?.status ?? 'sem resposta'})`,
+      );
+
+      throw new ServiceUnavailableError(
+        'O serviço externo da PokeAPI está temporariamente indisponível. Tente novamente mais tarde',
+      );
     }
   }
 
