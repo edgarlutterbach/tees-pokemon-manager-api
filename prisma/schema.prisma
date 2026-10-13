@@ -18,7 +18,10 @@ model Pokemon {
   nickname  String?  @db.VarChar(100)
   level     Int      @default(1)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  trainerId String?  @map("trainer_id") @db.Uuid
+  trainer   Trainer? @relation(fields: [trainerId], references: [id], onDelete: SetNull)
 
+  @@index([trainerId])
   @@map("pokemons")
 }
 
@@ -29,6 +32,7 @@ model Trainer {
   age       Int
   city      String   @db.VarChar(100)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  pokemons Pokemon[]
 
   @@map("trainers")
 }
