@@ -90,6 +90,22 @@ const doc = {
       statusCode: 409,
       message: 'Já existe um registro cadastrado com este e-mail.',
     },
+    TrainerNotFoundError: {
+      status: 'error',
+      statusCode: 404,
+      message: 'Treinador não encontrado no banco de dados',
+    },
+    TrainerIdValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'id',
+          message: 'O parâmetro id deve ser um UUID válido',
+        },
+      ],
+    },
     SearchPokemonsResult: {
       term: 'pika',
       totalMatches: 1,
@@ -108,7 +124,7 @@ const doc = {
         },
       ],
     },
-    ValidationError: {
+    ListPokemonsValidationError: {
       status: 'error',
       statusCode: 400,
       message: 'Dados de entrada inválidos',
@@ -116,6 +132,28 @@ const doc = {
         {
           field: 'minLevel',
           message: 'O parâmetro minLevel deve ser um número inteiro',
+        },
+      ],
+    },
+    CreatePokemonValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'trainerId',
+          message: 'O campo trainerId deve ser um UUID válido',
+        },
+      ],
+    },
+    CreateTrainerValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'email',
+          message: 'Formato de e-mail inválido',
         },
       ],
     },

@@ -213,7 +213,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ValidationError"
+                  "$ref": "#/components/schemas/CreatePokemonValidationError"
                 }
               }
             }
@@ -326,7 +326,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ValidationError"
+                  "$ref": "#/components/schemas/CreateTrainerValidationError"
                 }
               }
             }
@@ -348,6 +348,51 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateTrainerDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trainers/{id}": {
+      "delete": {
+        "tags": [
+          "Trainers"
+        ],
+        "summary": "Remove um Treinador",
+        "description": "Os Pokémons do treinador não são removidos: ficam sem treinador (selvagens).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID (UUID) do Treinador"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Treinador removido com sucesso"
+          },
+          "400": {
+            "description": "ID em formato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerIdValidationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Treinador não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerNotFoundError"
+                }
               }
             }
           }
@@ -621,6 +666,56 @@
           }
         }
       },
+      "TrainerNotFoundError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 404
+          },
+          "message": {
+            "type": "string",
+            "example": "Treinador não encontrado no banco de dados"
+          }
+        }
+      },
+      "TrainerIdValidationError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Dados de entrada inválidos"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "example": "id"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "O parâmetro id deve ser um UUID válido"
+                }
+              }
+            }
+          }
+        }
+      },
       "SearchPokemonsResult": {
         "type": "object",
         "properties": {
@@ -682,7 +777,7 @@
           }
         }
       },
-      "ValidationError": {
+      "ListPokemonsValidationError": {
         "type": "object",
         "properties": {
           "status": {
@@ -709,6 +804,72 @@
                 "message": {
                   "type": "string",
                   "example": "O parâmetro minLevel deve ser um número inteiro"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreatePokemonValidationError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Dados de entrada inválidos"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "example": "trainerId"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "O campo trainerId deve ser um UUID válido"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateTrainerValidationError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Dados de entrada inválidos"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "example": "email"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Formato de e-mail inválido"
                 }
               }
             }

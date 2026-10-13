@@ -35,7 +35,7 @@ router.get(
       }
       #swagger.responses[400] = {
         description: 'Parâmetros de busca inválidos',
-        content: { 'application/json': { schema: { $ref: '#/definitions/ValidationError' } } }
+        content: { 'application/json': { schema: { $ref: '#/definitions/ListPokemonsValidationError' } } }
       }
     */
     return controller.list(req, res);
@@ -87,7 +87,7 @@ router.post(
       #swagger.responses[201] = { description: 'Pokémon criado com sucesso' }
       #swagger.responses[400] = {
         description: 'Dados de entrada inválidos',
-        content: { 'application/json': { schema: { $ref: '#/definitions/ValidationError' } } }
+        content: { 'application/json': { schema: { $ref: '#/definitions/CreatePokemonValidationError' } } }
       }
       #swagger.responses[409] = {
         description: 'ID de Pokémon já cadastrado ou time do treinador completo (máximo de 6)',
