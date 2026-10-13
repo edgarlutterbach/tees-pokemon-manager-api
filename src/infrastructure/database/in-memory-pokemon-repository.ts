@@ -1,5 +1,7 @@
 import { Pokemon } from '@domain/entities/pokemon';
 import {
+  PaginatedPokemons,
+  Pagination,
   PokemonFilters,
   PokemonRepositoryContract,
 } from '@domain/repositories/pokemon-repository-contract';
@@ -24,19 +26,25 @@ export class InMemoryPokemonRepository implements PokemonRepositoryContract {
     return pokemon ?? null;
   }
 
-  async findByFilters({
-    type,
-    minLevel,
-    maxLevel,
-  }: PokemonFilters): Promise<Pokemon[]> {
-    return this.pokemons
+  async findByFilters(
+    { type, minLevel, maxLevel }: PokemonFilters,
+    { page, limit }: Pagination,
+  ): Promise<PaginatedPokemons> {
+    const filtered = this.pokemons
       .filter(
         (p) =>
           (type === undefined || p.type === type) &&
           (minLevel === undefined || p.level >= minLevel) &&
           (maxLevel === undefined || p.level <= maxLevel),
       )
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id));
+
+    const start = (page - 1) * limit;
+
+    return {
+      items: filtered.slice(start, start + limit),
+      total: filtered.length,
+    };
   }
 
   async searchByName(term: string): Promise<Pokemon[]> {

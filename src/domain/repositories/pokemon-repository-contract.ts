@@ -7,11 +7,24 @@ export interface PokemonFilters {
   maxLevel?: number;
 }
 
+export interface Pagination {
+  page: number;
+  limit: number;
+}
+
+export interface PaginatedPokemons {
+  items: Pokemon[];
+  total: number;
+}
+
 export interface PokemonRepositoryContract {
   create(pokemon: Pokemon): Promise<void>;
   findAll(): Promise<Pokemon[]>;
   findById(id: string): Promise<Pokemon | null>;
-  findByFilters(filters: PokemonFilters): Promise<Pokemon[]>;
+  findByFilters(
+    filters: PokemonFilters,
+    pagination: Pagination,
+  ): Promise<PaginatedPokemons>;
   update(pokemon: Pokemon): Promise<void>;
   delete(id: string): Promise<void>;
   updateLevel(id: string, newLevel: number): Promise<void>;

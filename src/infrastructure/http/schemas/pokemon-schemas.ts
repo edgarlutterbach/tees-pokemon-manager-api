@@ -56,7 +56,23 @@ export const createPokemonSchema = jsonBody({
 
 export type CreatePokemonInput = z.infer<typeof createPokemonSchema>;
 
-const levelQueryParam = (field: string, fallback: number) =>
+const PAGINATION = {
+  DEFAULT_PAGE: 1,
+  DEFAULT_LIMIT: 10,
+  MAX_LIMIT: 50,
+  MAX_PAGE: 10_000,
+} as const;
+
+interface IntegerQueryParamOptions {
+  min: number;
+  max: number;
+  fallback: number;
+}
+
+const integerQueryParam = (
+  field: string,
+  { min, max, fallback }: IntegerQueryParamOptions,
+) =>
   z
     .string({ error: `O parâmetro ${field} deve ser informado uma única vez` })
     .trim()
@@ -65,16 +81,17 @@ const levelQueryParam = (field: string, fallback: number) =>
     .pipe(
       z
         .number()
-        .min(
-          Pokemon.MIN_LEVEL,
-          `O parâmetro ${field} deve ser no mínimo ${Pokemon.MIN_LEVEL}`,
-        )
-        .max(
-          Pokemon.MAX_LEVEL,
-          `O parâmetro ${field} deve ser no máximo ${Pokemon.MAX_LEVEL}`,
-        ),
+        .min(min, `O parâmetro ${field} deve ser no mínimo ${min}`)
+        .max(max, `O parâmetro ${field} deve ser no máximo ${max}`),
     )
     .default(fallback);
+
+const levelQueryParam = (field: string, fallback: number) =>
+  integerQueryParam(field, {
+    min: Pokemon.MIN_LEVEL,
+    max: Pokemon.MAX_LEVEL,
+    fallback,
+  });
 
 export const listPokemonsQuerySchema = jsonBody({
   type: z
@@ -89,6 +106,16 @@ export const listPokemonsQuerySchema = jsonBody({
     .optional(),
   minLevel: levelQueryParam('minLevel', Pokemon.MIN_LEVEL),
   maxLevel: levelQueryParam('maxLevel', Pokemon.MAX_LEVEL),
+  page: integerQueryParam('page', {
+    min: 1,
+    max: PAGINATION.MAX_PAGE,
+    fallback: PAGINATION.DEFAULT_PAGE,
+  }),
+  limit: integerQueryParam('limit', {
+    min: 1,
+    max: PAGINATION.MAX_LIMIT,
+    fallback: PAGINATION.DEFAULT_LIMIT,
+  }),
 }).refine((query) => query.minLevel <= query.maxLevel, {
   message: 'O parâmetro minLevel não pode ser maior que maxLevel',
   path: ['minLevel'],

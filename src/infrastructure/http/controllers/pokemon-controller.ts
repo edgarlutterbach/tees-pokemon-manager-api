@@ -42,9 +42,9 @@ export class PokemonController {
   async list(req: Request, res: Response): Promise<Response> {
     const filters = req.query as unknown as ListPokemonQuery;
 
-    const pokemons = await this.listUseCase.execute(filters);
+    const result = await this.listUseCase.execute(filters);
 
-    return res.status(200).json(pokemons);
+    return res.status(200).json(result);
   }
 
   async getById(req: Request, res: Response): Promise<Response> {

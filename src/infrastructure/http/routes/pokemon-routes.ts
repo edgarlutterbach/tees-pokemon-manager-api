@@ -24,14 +24,16 @@ router.get(
   (req, res) => {
     /*
       #swagger.tags = ['Pokemons']
-      #swagger.summary = 'Lista os Pokémons do catálogo'
-      #swagger.description = 'Retorna o catálogo ordenado por nome, com filtros opcionais por tipo e faixa de nível.'
+      #swagger.summary = 'Lista os Pokémons do catálogo de forma paginada'
+      #swagger.description = 'Retorna o catálogo ordenado por nome, com paginação e filtros opcionais por tipo e faixa de nível.'
+      #swagger.parameters['page'] = { in: 'query', type: 'integer', description: 'Número da página, a partir de 1 (padrão: 1)' }
+      #swagger.parameters['limit'] = { in: 'query', type: 'integer', description: 'Itens por página, de 1 a 50 (padrão: 10)' }
       #swagger.parameters['type'] = { in: 'query', type: 'string', description: 'Tipo, sem diferenciar maiúsculas (FIRE, GRASS, WATER, ELECTRIC, PSYCHIC, POISON, FLYING)' }
       #swagger.parameters['minLevel'] = { in: 'query', type: 'integer', description: 'Nível mínimo, de 1 a 100 (padrão: 1)' }
       #swagger.parameters['maxLevel'] = { in: 'query', type: 'integer', description: 'Nível máximo, de 1 a 100 (padrão: 100)' }
       #swagger.responses[200] = {
-        description: 'Lista de Pokémons',
-        content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/definitions/Pokemon' } } } }
+        description: 'Página de Pokémons com metadados de paginação',
+        content: { 'application/json': { schema: { $ref: '#/definitions/PaginatedPokemons' } } }
       }
       #swagger.responses[400] = {
         description: 'Parâmetros de busca inválidos',
@@ -41,20 +43,6 @@ router.get(
     return controller.list(req, res);
   },
 );
-
-router.get('/api/v1/pokemons', (req, res) => {
-  /*
-      #swagger.tags = ['Pokemons']
-      #swagger.summary = 'Lista todos os Pokémons'
-      #swagger.description = 'Retorna o catálogo completo, com filtro opcional por tipo.'
-      #swagger.parameters['type'] = { in: 'query', type: 'string', description: 'Filtra pelo tipo (ex: FIRE)' }
-      #swagger.responses[200] = {
-        description: 'Lista de Pokémons',
-        content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/definitions/Pokemon' } } } }
-      }
-    */
-  return controller.list(req, res);
-});
 
 router.get('/api/v1/pokemons/:id', (req, res) => {
   /*

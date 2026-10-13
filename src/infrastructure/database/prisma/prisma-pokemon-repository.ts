@@ -3,6 +3,8 @@ import { Pokemon } from '@domain/entities/pokemon';
 import { PokemonType } from '@domain/entities/pokemon-type';
 import { PokemonRarity } from '@domain/entities/pokemon-rarity';
 import {
+  PaginatedPokemons,
+  Pagination,
   PokemonFilters,
   PokemonRepositoryContract,
 } from '@domain/repositories/pokemon-repository-contract';
@@ -29,20 +31,29 @@ export class PrismaPokemonRepository implements PokemonRepositoryContract {
     return row ? this.toEntity(row) : null;
   }
 
-  async findByFilters({
-    type,
-    minLevel,
-    maxLevel,
-  }: PokemonFilters): Promise<Pokemon[]> {
-    const rows = await prisma.pokemon.findMany({
-      where: {
-        type,
-        level: { gte: minLevel, lte: maxLevel },
-      },
-      orderBy: { name: 'asc' },
-    });
+  async findByFilters(
+    { type, minLevel, maxLevel }: PokemonFilters,
+    { page, limit }: Pagination,
+  ): Promise<PaginatedPokemons> {
+    const where: Prisma.PokemonWhereInput = {
+      type,
+      level: { gte: minLevel, lte: maxLevel },
+    };
 
-    return rows.map((row) => this.toEntity(row));
+    const [rows, total] = await prisma.$transaction(
+      [
+        prisma.pokemon.findMany({
+          where,
+          orderBy: [{ name: 'asc' }, { id: 'asc' }],
+          skip: (page - 1) * limit,
+          take: limit,
+        }),
+        prisma.pokemon.count({ where }),
+      ],
+      { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead },
+    );
+
+    return { items: rows.map((row) => this.toEntity(row)), total };
   }
 
   async searchByName(term: string): Promise<Pokemon[]> {

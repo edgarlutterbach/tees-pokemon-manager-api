@@ -40,28 +40,67 @@
         "tags": [
           "Pokemons"
         ],
-        "summary": "Lista todos os Pokémons",
-        "description": "Retorna o catálogo completo, com filtro opcional por tipo.",
+        "summary": "Lista os Pokémons do catálogo de forma paginada",
+        "description": "Retorna o catálogo ordenado por nome, com paginação e filtros opcionais por tipo e faixa de nível.",
         "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página, a partir de 1 (padrão: 1)",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Itens por página, de 1 a 50 (padrão: 10)",
+            "schema": {
+              "type": "integer"
+            }
+          },
           {
             "name": "type",
             "in": "query",
-            "description": "Filtra pelo tipo (ex: FIRE)",
+            "description": "Tipo, sem diferenciar maiúsculas (FIRE, GRASS, WATER, ELECTRIC, PSYCHIC, POISON, FLYING)",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "minLevel",
+            "in": "query",
+            "description": "Nível mínimo, de 1 a 100 (padrão: 1)",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "maxLevel",
+            "in": "query",
+            "description": "Nível máximo, de 1 a 100 (padrão: 100)",
+            "schema": {
+              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Lista de Pokémons",
+            "description": "Página de Pokémons com metadados de paginação",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Pokemon"
-                  }
+                  "$ref": "#/components/schemas/PaginatedPokemons"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros de busca inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListPokemonsValidationError"
                 }
               }
             }
@@ -440,6 +479,34 @@
           "level": {
             "type": "number",
             "example": 25
+          }
+        }
+      },
+      "PaginatedPokemons": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pokemon"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "type": "number",
+                "example": 1
+              },
+              "limit": {
+                "type": "number",
+                "example": 10
+              },
+              "total": {
+                "type": "number",
+                "example": 45
+              }
+            }
           }
         }
       },

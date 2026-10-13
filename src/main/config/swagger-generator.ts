@@ -32,6 +32,14 @@ const doc = {
       nickname: 'Pika',
       level: 25,
     },
+    PaginatedPokemons: {
+      data: [{ $ref: '#/definitions/Pokemon' }],
+      meta: {
+        page: 1,
+        limit: 10,
+        total: 45,
+      },
+    },
     CreatePokemonDto: {
       $id: '25',
       $name: 'Pikachu',
