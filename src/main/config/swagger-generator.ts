@@ -91,10 +91,27 @@ const doc = {
       $age: 10,
       $city: 'Pallet Town',
     },
-    BadRequestError: {
+    UpdatePokemonLevelValidationError: {
       status: 'error',
       statusCode: 400,
-      message: 'Level deve ser um número inteiro entre 1 e 100.',
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'level',
+          message: 'O nível deve ser no máximo 100',
+        },
+      ],
+    },
+    PokemonIdValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'id',
+          message: 'O parâmetro id deve ter no máximo 50 caracteres',
+        },
+      ],
     },
     NotFoundError: {
       status: 'error',

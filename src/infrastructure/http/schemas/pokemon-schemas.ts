@@ -8,6 +8,8 @@ import {
   typeError,
 } from '@infrastructure/http/schemas/schema-helpers';
 import { UpdatePokemonDTO } from '@application/dtos/update-pokemon-dto';
+import { UpdatePokemonLevelDTO } from '@application/dtos/update-pokemon-level-dto';
+import { PokemonParams } from '@application/dtos/pokemon-params';
 
 const TYPES = Object.values(PokemonType).join(', ');
 const RARITIES = Object.values(PokemonRarity).join(', ');
@@ -17,6 +19,12 @@ const positiveInteger = (field: string) =>
     .number({ error: typeError(field, 'um número') })
     .int(`O campo ${field} deve ser um número inteiro`)
     .positive(`O campo ${field} deve ser maior que zero`);
+
+const levelField = z
+  .number({ error: typeError('level', 'um número') })
+  .int('O nível deve ser um número inteiro')
+  .min(Pokemon.MIN_LEVEL, `O nível deve ser no mínimo ${Pokemon.MIN_LEVEL}`)
+  .max(Pokemon.MAX_LEVEL, `O nível deve ser no máximo ${Pokemon.MAX_LEVEL}`);
 
 export const createPokemonSchema = jsonBody({
   id: z
@@ -44,12 +52,7 @@ export const createPokemonSchema = jsonBody({
     .min(1, 'O apelido não pode ser vazio')
     .max(100, 'O apelido deve ter no máximo 100 caracteres')
     .optional(),
-  level: z
-    .number({ error: typeError('level', 'um número') })
-    .int('O nível deve ser um número inteiro')
-    .min(Pokemon.MIN_LEVEL, `O nível deve ser no mínimo ${Pokemon.MIN_LEVEL}`)
-    .max(Pokemon.MAX_LEVEL, `O nível deve ser no máximo ${Pokemon.MAX_LEVEL}`)
-    .optional(),
+  level: levelField.optional(),
   trainerId: z
     .uuid({ error: 'O campo trainerId deve ser um UUID válido' })
     .optional(),
@@ -70,6 +73,18 @@ export const updatePokemonSchema = createPokemonSchema
     message: 'Informe ao menos um campo para atualizar',
     when: (payload) => payload.issues.length === 0,
   }) satisfies z.ZodType<UpdatePokemonDTO>;
+
+export const updatePokemonLevelSchema = jsonBody({
+  level: levelField,
+}) satisfies z.ZodType<UpdatePokemonLevelDTO>;
+
+export const pokemonIdParamsSchema = z.object({
+  id: z
+    .string()
+    .trim()
+    .min(1, 'O parâmetro id não pode ser vazio')
+    .max(50, 'O parâmetro id deve ter no máximo 50 caracteres'),
+}) satisfies z.ZodType<PokemonParams>;
 
 export type CreatePokemonInput = z.infer<typeof createPokemonSchema>;
 

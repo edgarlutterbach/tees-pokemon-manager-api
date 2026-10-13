@@ -4,6 +4,8 @@ import { validateRequest } from '@infrastructure/http/middlewares/validate-reque
 import {
   createPokemonSchema,
   listPokemonsQuerySchema,
+  pokemonIdParamsSchema,
+  updatePokemonLevelSchema,
   updatePokemonSchema,
 } from '@infrastructure/http/schemas/pokemon-schemas';
 
@@ -45,8 +47,11 @@ router.get(
   },
 );
 
-router.get('/api/v1/pokemons/:id', (req, res) => {
-  /*
+router.get(
+  '/api/v1/pokemons/:id',
+  validateRequest({ params: pokemonIdParamsSchema }),
+  (req, res) => {
+    /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Busca um Pokémon pelo ID'
       #swagger.parameters['id'] = { description: 'ID do Pokémon' }
@@ -54,13 +59,18 @@ router.get('/api/v1/pokemons/:id', (req, res) => {
         description: 'Pokémon encontrado',
         content: { 'application/json': { schema: { $ref: '#/definitions/Pokemon' } } }
       }
+      #swagger.responses[400] = {
+        description: 'ID com mais de 50 caracteres',
+        content: { 'application/json': { schema: { $ref: '#/definitions/PokemonIdValidationError' } } }
+      }
       #swagger.responses[404] = {
         description: 'Pokémon não encontrado',
         content: { 'application/json': { schema: { $ref: '#/definitions/NotFoundError' } } }
       }
     */
-  return controller.getById(req, res);
-});
+    return controller.getById(req, res);
+  },
+);
 
 router.post(
   '/api/v1/pokemons/',
@@ -101,7 +111,7 @@ router.post(
 
 router.put(
   '/api/v1/pokemons/:id',
-  validateRequest({ body: updatePokemonSchema }),
+  validateRequest({ params: pokemonIdParamsSchema, body: updatePokemonSchema }),
   (req, res) => {
     /*
       #swagger.tags = ['Pokemons']
@@ -129,8 +139,14 @@ router.put(
   },
 );
 
-router.patch('/api/v1/pokemons/:id/level', (req, res) => {
-  /*
+router.patch(
+  '/api/v1/pokemons/:id/level',
+  validateRequest({
+    params: pokemonIdParamsSchema,
+    body: updatePokemonLevelSchema,
+  }),
+  (req, res) => {
+    /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Atualiza o nível de um Pokémon'
       #swagger.description = 'Altera apenas o nível do Pokémon. O valor deve ser um inteiro entre 1 e 100.'
@@ -144,29 +160,38 @@ router.patch('/api/v1/pokemons/:id/level', (req, res) => {
         content: { 'application/json': { schema: { $ref: '#/definitions/Pokemon' } } }
       }
       #swagger.responses[400] = {
-        description: 'Nível ausente ou fora do intervalo permitido',
-        content: { 'application/json': { schema: { $ref: '#/definitions/BadRequestError' } } }
+        description: 'ID inválido, nível ausente, não inteiro ou fora do intervalo de 1 a 100',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UpdatePokemonLevelValidationError' } } }
       }
       #swagger.responses[404] = {
         description: 'Pokémon não encontrado',
         content: { 'application/json': { schema: { $ref: '#/definitions/NotFoundError' } } }
       }
     */
-  return controller.updateLevel(req, res);
-});
+    return controller.updateLevel(req, res);
+  },
+);
 
-router.delete('/api/v1/pokemons/:id', (req, res) => {
-  /*
+router.delete(
+  '/api/v1/pokemons/:id',
+  validateRequest({ params: pokemonIdParamsSchema }),
+  (req, res) => {
+    /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Remove um Pokémon do catálogo'
       #swagger.parameters['id'] = { description: 'ID do Pokémon' }
       #swagger.responses[204] = { description: 'Pokémon removido com sucesso' }
+      #swagger.responses[400] = {
+        description: 'ID com mais de 50 caracteres',
+        content: { 'application/json': { schema: { $ref: '#/definitions/PokemonIdValidationError' } } }
+      }
       #swagger.responses[404] = {
         description: 'Pokémon não encontrado',
         content: { 'application/json': { schema: { $ref: '#/definitions/NotFoundError' } } }
       }
     */
-  return controller.delete(req, res);
-});
+    return controller.delete(req, res);
+  },
+);
 
 export { router as pokemonRoutes };

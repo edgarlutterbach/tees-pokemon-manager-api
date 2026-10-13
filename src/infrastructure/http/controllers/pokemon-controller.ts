@@ -8,6 +8,7 @@ import { GetPokemonStatsUseCase } from '@application/use-cases/get-pokemon-stats
 import { UpdatePokemonLevelUseCase } from '@application/use-cases/update-pokemon-level-use-case';
 import { SearchPokemonsByNameUseCase } from '@application/use-cases/search-pokemons-by-name-use-case';
 import { ListPokemonQuery } from '@infrastructure/http/schemas/pokemon-schemas';
+import { UpdatePokemonLevelDTO } from '@application/dtos/update-pokemon-level-dto';
 
 export class PokemonController {
   private listUseCase: ListPokemonsUseCase;
@@ -87,7 +88,7 @@ export class PokemonController {
 
   async updateLevel(req: Request, res: Response): Promise<Response> {
     const id = String(req.params.id);
-    const level = req.body?.level;
+    const { level } = req.body as UpdatePokemonLevelDTO;
 
     const pokemon = await this.updateLevelUseCase.execute(id, level);
 
