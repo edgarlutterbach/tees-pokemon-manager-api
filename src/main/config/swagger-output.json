@@ -613,7 +613,7 @@
           },
           "message": {
             "type": "string",
-            "example": "Já existe um Treinador cadastrado com este e-mail."
+            "example": "Já existe um registro cadastrado com este e-mail."
           }
         }
       },

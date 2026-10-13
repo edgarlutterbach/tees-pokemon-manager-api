@@ -1,6 +1,6 @@
 import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
 import { Pokemon } from '@domain/entities/pokemon';
-import { ResourceNotFoundError } from '@domain/errors/resource-not-found-error';
+import { NotFoundError } from '@domain/errors/not-found-error';
 
 export class GetPokemonByIdUseCase {
   private repository: PokemonRepositoryContract;
@@ -13,9 +13,7 @@ export class GetPokemonByIdUseCase {
     const pokemon = await this.repository.findById(id);
 
     if (!pokemon) {
-      throw new ResourceNotFoundError(
-        'Pokémon não encontrado na base de dados.',
-      );
+      throw new NotFoundError('Pokémon não encontrado na base de dados.');
     }
 
     return pokemon;

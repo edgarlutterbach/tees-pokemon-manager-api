@@ -1,6 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { DomainError } from '@domain/errors/domain-error';
-import { ErrorCode } from '@domain/errors/error-code';
+import { ValidationError } from '@domain/errors/validation-error';
 
 interface TrainerProps {
   id?: string;
@@ -23,14 +22,11 @@ export class Trainer {
     const email = props.email.trim().toLowerCase();
 
     if (!Trainer.EMAIL_PATTERN.test(email)) {
-      throw new DomainError('E-mail inválido.', ErrorCode.INVALID_ATTRIBUTES);
+      throw new ValidationError('E-mail inválido.');
     }
 
     if (!Number.isInteger(props.age) || props.age <= 0) {
-      throw new DomainError(
-        'A idade deve ser um número inteiro positivo.',
-        ErrorCode.INVALID_ATTRIBUTES,
-      );
+      throw new ValidationError('A idade deve ser um número inteiro positivo.');
     }
 
     this.id = props.id ?? randomUUID();

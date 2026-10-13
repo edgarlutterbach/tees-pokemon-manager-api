@@ -1,5 +1,5 @@
 import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
-import { ResourceNotFoundError } from '@domain/errors/resource-not-found-error';
+import { NotFoundError } from '@domain/errors/not-found-error';
 
 export class DeletePokemonUseCase {
   private repository: PokemonRepositoryContract;
@@ -12,7 +12,7 @@ export class DeletePokemonUseCase {
     const existingPokemon = await this.repository.findById(id);
 
     if (!existingPokemon) {
-      throw new ResourceNotFoundError('Pokémon não encontrado no catálogo.');
+      throw new NotFoundError('Pokémon não encontrado no catálogo.');
     }
 
     await this.repository.delete(id);

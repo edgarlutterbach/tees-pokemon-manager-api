@@ -1,4 +1,4 @@
-import { Pokemon } from '../entities/pokemon';
+import { Pokemon } from '@domain/entities/pokemon';
 
 type AttackerStats = Pick<Pokemon, 'attack'>;
 type DefenderStats = Pick<Pokemon, 'defense' | 'hp'>;

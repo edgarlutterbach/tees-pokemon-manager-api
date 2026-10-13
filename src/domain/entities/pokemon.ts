@@ -1,6 +1,6 @@
 import { PokemonType } from './pokemon-type';
 import { PokemonRarity } from './pokemon-rarity';
-import { InvalidPokemonAttributesError } from '../errors/invalid-pokemon-attributes-error';
+import { ValidationError } from '@domain/errors/validation-error';
 
 interface PokemonProps {
   id: string;
@@ -29,17 +29,13 @@ export class Pokemon {
 
   constructor(props: PokemonProps) {
     if (props.hp <= 0) {
-      throw new InvalidPokemonAttributesError('HP deve ser maior que zero.');
+      throw new ValidationError('HP deve ser maior que zero.');
     }
     if (props.attack <= 0) {
-      throw new InvalidPokemonAttributesError(
-        'Attack deve ser maior que zero.',
-      );
+      throw new ValidationError('Attack deve ser maior que zero.');
     }
     if (props.defense <= 0) {
-      throw new InvalidPokemonAttributesError(
-        'Defense deve ser maior que zero.',
-      );
+      throw new ValidationError('Defense deve ser maior que zero.');
     }
 
     const level = props.level ?? Pokemon.MIN_LEVEL;
@@ -49,7 +45,7 @@ export class Pokemon {
       level < Pokemon.MIN_LEVEL ||
       level > Pokemon.MAX_LEVEL
     ) {
-      throw new InvalidPokemonAttributesError(
+      throw new ValidationError(
         `Level deve ser um número inteiro entre ${Pokemon.MIN_LEVEL} e ${Pokemon.MAX_LEVEL}`,
       );
     }

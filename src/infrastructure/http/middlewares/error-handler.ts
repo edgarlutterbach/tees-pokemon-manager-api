@@ -1,13 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { DomainError } from '@domain/errors/domain-error';
-import { ErrorCode } from '@domain/errors/error-code';
-import { RequestValidationError } from '@infrastructure/http/errors/request-validation-error';
-
-const statusCodeByErrorCode: Record<ErrorCode, number> = {
-  [ErrorCode.INVALID_ATTRIBUTES]: 400,
-  [ErrorCode.RESOURCE_NOT_FOUND]: 404,
-  [ErrorCode.DUPLICATE_RESOURCE]: 409,
-};
+import { AppError } from '@domain/errors/app-error';
+import { Prisma } from '@prisma/client';
+import { PrismaErrorMapper } from '@infrastructure/database/prisma/prisma-error-mapper';
 
 interface BodyParserError extends Error {
   type: string;
@@ -30,19 +24,36 @@ function isBodyParserError(error: Error): error is BodyParserError {
   );
 }
 
+function sendAppError(res: Response, error: AppError): Response {
+  const payload: Record<string, unknown> = {
+    status: 'error',
+    statusCode: error.statusCode,
+    message: error.message,
+  };
+
+  if (error.details !== undefined) {
+    payload.details = error.details;
+  }
+
+  return res.status(error.statusCode).json(payload);
+}
+
 export function errorHandler(
   error: Error,
-  req: Request,
+  _req: Request,
   res: Response,
   _next: NextFunction,
 ): Response {
-  if (error instanceof RequestValidationError) {
-    return res.status(400).json({
-      status: 'error',
-      statusCode: 400,
-      message: error.message,
-      details: error.details,
-    });
+  if (error instanceof AppError) {
+    return sendAppError(res, error);
+  }
+
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    const mappedError = PrismaErrorMapper.toAppError(error);
+
+    if (mappedError) {
+      return sendAppError(res, mappedError);
+    }
   }
 
   if (isBodyParserError(error)) {
@@ -53,17 +64,7 @@ export function errorHandler(
     });
   }
 
-  if (error instanceof DomainError) {
-    const statusCode = statusCodeByErrorCode[error.code] ?? 400;
-
-    return res.status(statusCode).json({
-      status: 'error',
-      statusCode,
-      message: error.message,
-    });
-  }
-
-  console.error('[Uncaught Exception]:', error);
+  console.error('[Unhandled System Error]:', error);
 
   return res.status(500).json({
     status: 'error',

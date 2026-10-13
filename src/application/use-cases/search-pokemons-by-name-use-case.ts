@@ -1,7 +1,6 @@
 import { Pokemon } from '@domain/entities/pokemon';
 import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
-import { DomainError } from '@domain/errors/domain-error';
-import { ErrorCode } from '@domain/errors/error-code';
+import { ValidationError } from '@domain/errors/validation-error';
 
 export interface SearchPokemonsResult {
   term: string;
@@ -21,10 +20,7 @@ export class SearchPokemonsByNameUseCase {
     const normalizedTerm = term?.trim();
 
     if (!normalizedTerm) {
-      throw new DomainError(
-        'O parâmetro name é obrigatório para a busca.',
-        ErrorCode.INVALID_ATTRIBUTES,
-      );
+      throw new ValidationError('O parâmetro nome é obrigatório para a busca.');
     }
 
     const [pokemons, totalCatalog] = await Promise.all([

@@ -87,7 +87,7 @@ const doc = {
     TrainerConflictError: {
       status: 'error',
       statusCode: 409,
-      message: 'Já existe um Treinador cadastrado com este e-mail.',
+      message: 'Já existe um registro cadastrado com este e-mail.',
     },
     SearchPokemonsResult: {
       term: 'pika',

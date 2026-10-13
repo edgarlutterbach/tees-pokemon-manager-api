@@ -1,7 +1,7 @@
 import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
 import { CreatePokemonDTO } from '@application/dtos/create-pokemon-dto';
 import { Pokemon } from '@domain/entities/pokemon';
-import { DuplicateResourceError } from '@domain/errors/duplicate-resource-error';
+import { ConflictError } from '@domain/errors/conflict-error';
 
 export class CreatePokemonUseCase {
   private repository: PokemonRepositoryContract;
@@ -14,9 +14,7 @@ export class CreatePokemonUseCase {
     const pokemonExistente = await this.repository.findById(data.id);
 
     if (pokemonExistente) {
-      throw new DuplicateResourceError(
-        'Já existe um Pokémon cadastrado com este ID.',
-      );
+      throw new ConflictError('Já existe um Pokémon cadastrado com este ID.');
     }
 
     const novoPokemon = new Pokemon(data);
