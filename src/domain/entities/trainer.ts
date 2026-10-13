@@ -10,6 +10,7 @@ interface TrainerProps {
 }
 
 export class Trainer {
+  static readonly MAX_TEAM_SIZE = 6;
   private static readonly EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   readonly id: string;

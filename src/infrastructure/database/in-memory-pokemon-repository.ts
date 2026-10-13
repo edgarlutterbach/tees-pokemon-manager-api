@@ -50,6 +50,10 @@ export class InMemoryPokemonRepository implements PokemonRepositoryContract {
     return this.pokemons.length;
   }
 
+  async countByTrainerId(trainerId: string): Promise<number> {
+    return this.pokemons.filter((p) => p.trainerId === trainerId).length;
+  }
+
   async update(pokemon: Pokemon): Promise<void> {
     const index = this.pokemons.findIndex((p) => p.id === pokemon.id);
 

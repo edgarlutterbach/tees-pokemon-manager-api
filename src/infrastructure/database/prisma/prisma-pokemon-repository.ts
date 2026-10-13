@@ -63,6 +63,10 @@ export class PrismaPokemonRepository implements PokemonRepositoryContract {
     return prisma.pokemon.count();
   }
 
+  async countByTrainerId(trainerId: string): Promise<number> {
+    return prisma.pokemon.count({ where: { trainerId } });
+  }
+
   async update(pokemon: Pokemon): Promise<void> {
     await prisma.pokemon.update({
       where: { id: pokemon.id },

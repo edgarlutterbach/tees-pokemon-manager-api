@@ -90,7 +90,7 @@ router.post(
         content: { 'application/json': { schema: { $ref: '#/definitions/ValidationError' } } }
       }
       #swagger.responses[409] = {
-        description: 'Já existe um Pokémon cadastrado com este ID',
+        description: 'ID de Pokémon já cadastrado ou time do treinador completo (máximo de 6)',
         content: { 'application/json': { schema: { $ref: '#/definitions/ConflictError' } } }
       }
     */

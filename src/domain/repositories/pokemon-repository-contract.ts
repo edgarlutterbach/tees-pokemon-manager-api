@@ -17,4 +17,5 @@ export interface PokemonRepositoryContract {
   updateLevel(id: string, newLevel: number): Promise<void>;
   searchByName(term: string): Promise<Pokemon[]>;
   count(): Promise<number>;
+  countByTrainerId(trainerId: string): Promise<number>;
 }
