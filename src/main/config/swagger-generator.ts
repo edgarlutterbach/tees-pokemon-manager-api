@@ -11,6 +11,17 @@ const doc = {
   host: 'localhost:3333',
   basePath: '/',
   schemes: ['http'],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description:
+          'Cole apenas o token retornado por POST /api/v1/sessions, sem o prefixo Bearer.',
+      },
+    },
+  },
   consumes: ['application/json'],
   produces: ['application/json'],
   tags: [
@@ -22,6 +33,10 @@ const doc = {
     {
       name: 'Pokedex',
       description: 'Consultas diretas à PokéAPI oficial',
+    },
+    {
+      name: 'Sessions',
+      description: 'Autenticação de Treinadores',
     },
   ],
   definitions: {
@@ -84,12 +99,14 @@ const doc = {
       email: 'ash@pokemon.com',
       age: 10,
       city: 'Pallet Town',
+      role: 'USER',
     },
     CreateTrainerDto: {
       $name: 'Ash Ketchum',
       $email: 'ash@pokemon.com',
       $age: 10,
       $city: 'Pallet Town',
+      $password: 'pikachu123',
     },
     UpdatePokemonLevelValidationError: {
       status: 'error',
@@ -291,6 +308,43 @@ const doc = {
         },
       ],
     },
+    AuthenticateTrainerDto: {
+      $email: 'ash@pokemon.com',
+      $password: 'pikachu123',
+    },
+    Session: {
+      message: 'Login realizado com sucesso!',
+      data: {
+        trainer: { $ref: '#/definitions/Trainer' },
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+      },
+    },
+    SessionValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'password',
+          message: 'O campo password é obrigatório',
+        },
+      ],
+    },
+    UnauthorizedError: {
+      status: 'error',
+      statusCode: 401,
+      message: 'Token JWT inválido ou expirado',
+    },
+    ForbiddenError: {
+      status: 'error',
+      statusCode: 403,
+      message: 'Você não tem permissão para acessar este recurso',
+    },
+    InvalidCredentialsError: {
+      status: 'error',
+      statusCode: 401,
+      message: 'E-mail ou senha inválidos',
+    },
     SearchBadRequestError: {
       status: 'error',
       statusCode: 400,
@@ -305,6 +359,7 @@ const endpointsFiles = [
   path.resolve(__dirname, '../../infrastructure/http/routes/pokemon-routes.ts'),
   path.resolve(__dirname, '../../infrastructure/http/routes/trainer-routes.ts'),
   path.resolve(__dirname, '../../infrastructure/http/routes/pokedex-routes.ts'),
+  path.resolve(__dirname, '../../infrastructure/http/routes/session-routes.ts'),
 ];
 
 swaggerAutogen({ openapi: '3.0.0' })(outputFile, endpointsFiles, doc);

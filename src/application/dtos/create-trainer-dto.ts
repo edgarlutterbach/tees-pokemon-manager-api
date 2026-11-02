@@ -3,4 +3,5 @@ export interface CreateTrainerDTO {
   email: string;
   age: number;
   city: string;
+  password: string;
 }

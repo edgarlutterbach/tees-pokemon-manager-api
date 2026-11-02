@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { ValidationError } from '@domain/errors/validation-error';
+import { TrainerRole } from './trainer-role';
 
 interface TrainerProps {
   id?: string;
@@ -7,6 +8,8 @@ interface TrainerProps {
   email: string;
   age: number;
   city: string;
+  password: string;
+  role: TrainerRole;
 }
 
 export class Trainer {
@@ -18,6 +21,8 @@ export class Trainer {
   readonly email: string;
   readonly age: number;
   readonly city: string;
+  readonly password: string;
+  readonly role: TrainerRole;
 
   constructor(props: TrainerProps) {
     const email = props.email.trim().toLowerCase();
@@ -35,5 +40,18 @@ export class Trainer {
     this.email = email;
     this.age = props.age;
     this.city = props.city;
+    this.password = props.password;
+    this.role = props.role;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      email: this.email,
+      age: this.age,
+      city: this.city,
+      role: this.role,
+    };
   }
 }

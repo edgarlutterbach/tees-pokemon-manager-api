@@ -1,5 +1,6 @@
 import { Trainer as TrainerModel } from '@prisma/client';
 import { Trainer } from '@domain/entities/trainer';
+import { TrainerRole } from '@domain/entities/trainer-role';
 import { TrainerRepositoryContract } from '@domain/repositories/trainer-repository-contract';
 import { prisma } from './client';
 
@@ -12,6 +13,8 @@ export class PrismaTrainerRepository implements TrainerRepositoryContract {
         email: trainer.email,
         age: trainer.age,
         city: trainer.city,
+        password: trainer.password,
+        role: trainer.role,
       },
     });
   }
@@ -24,6 +27,8 @@ export class PrismaTrainerRepository implements TrainerRepositoryContract {
         email: trainer.email,
         age: trainer.age,
         city: trainer.city,
+        password: trainer.password,
+        role: trainer.role,
       },
     });
   }
@@ -53,6 +58,8 @@ export class PrismaTrainerRepository implements TrainerRepositoryContract {
       email: row.email,
       age: row.age,
       city: row.city,
+      password: row.password,
+      role: row.role as TrainerRole,
     });
   }
 }

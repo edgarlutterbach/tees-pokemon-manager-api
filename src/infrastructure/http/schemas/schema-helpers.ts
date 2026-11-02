@@ -12,3 +12,9 @@ export function jsonBody<Shape extends z.ZodRawShape>(shape: Shape) {
     error: 'O corpo da requisição deve ser um objeto JSON',
   });
 }
+
+const BCRYPT_MAX_BYTES = 72;
+
+export function fitsBcryptLimit(value: string): boolean {
+  return Buffer.byteLength(value, 'utf8') <= BCRYPT_MAX_BYTES;
+}

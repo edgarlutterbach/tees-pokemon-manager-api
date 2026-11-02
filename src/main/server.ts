@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { pokemonRoutes } from '@infrastructure/http/routes/pokemon-routes';
 import { trainerRoutes } from '@infrastructure/http/routes/trainer-routes';
 import { pokedexRoutes } from '@infrastructure/http/routes/pokedex-routes';
+import { sessionRoutes } from '@infrastructure/http/routes/session-routes';
 import { swaggerUi, swaggerDocument } from './config/swagger';
 import { errorHandler } from '@infrastructure/http/middlewares/error-handler';
 
@@ -19,6 +20,7 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(pokemonRoutes);
 app.use(trainerRoutes);
 app.use(pokedexRoutes);
+app.use(sessionRoutes);
 
 app.use(errorHandler);
 

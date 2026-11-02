@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Pokemon {
   id        String   @id @db.VarChar(50)
   name      String   @db.VarChar(100)
@@ -35,6 +40,8 @@ model Trainer {
   email     String   @unique @db.VarChar(255)
   age       Int
   city      String   @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  role      Role     @default(USER)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   pokemons Pokemon[]
 

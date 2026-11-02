@@ -6,6 +6,7 @@ import {
   TrainerScopedParams,
 } from '@application/dtos/trainer-params';
 import {
+  fitsBcryptLimit,
   jsonBody,
   typeError,
 } from '@infrastructure/http/schemas/schema-helpers';
@@ -31,6 +32,10 @@ export const createTrainerSchema = jsonBody({
     .trim()
     .min(2, 'A cidade deve ter no mínimo 2 caracteres')
     .max(100, 'A cidade deve ter no máximo 100 caracteres'),
+  password: z
+    .string({ error: typeError('password', 'um texto') })
+    .min(8, 'A senha deve ter no mínimo 8 caracteres')
+    .refine(fitsBcryptLimit, 'A senha deve ter no máximo 72 bytes'),
 }) satisfies z.ZodType<CreateTrainerDTO>;
 
 export type CreateTrainerInput = z.infer<typeof createTrainerSchema>;
