@@ -172,6 +172,24 @@ const doc = {
         },
       ],
     },
+    UpdateTrainerRoleDto: {
+      $role: 'ADMIN',
+    },
+    UpdatedTrainerRole: {
+      message: 'Papel do treinador atualizado com sucesso!',
+      data: { $ref: '#/definitions/Trainer' },
+    },
+    UpdateTrainerRoleValidationError: {
+      status: 'error',
+      statusCode: 400,
+      message: 'Dados de entrada inválidos',
+      details: [
+        {
+          field: 'role',
+          message: 'O campo role deve ser um dos valores: USER, ADMIN',
+        },
+      ],
+    },
     CapturePokemonDto: {
       $name: 'charmander',
       nickname: 'Chama',

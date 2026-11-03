@@ -44,6 +44,18 @@ export class Trainer {
     this.role = props.role;
   }
 
+  withRole(role: TrainerRole): Trainer {
+    return new Trainer({
+      id: this.id,
+      name: this.name,
+      email: this.email,
+      age: this.age,
+      city: this.city,
+      password: this.password,
+      role,
+    });
+  }
+
   toJSON() {
     return {
       id: this.id,

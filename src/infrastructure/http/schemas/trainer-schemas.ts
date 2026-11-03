@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { CreateTrainerDTO } from '@application/dtos/create-trainer-dto';
 import { CapturePokemonDTO } from '@application/dtos/capture-pokemon-dto';
+import { UpdateTrainerRoleDTO } from '@application/dtos/update-trainer-role-dto';
+import { TrainerRole } from '@domain/entities/trainer-role';
 import {
   TrainerParams,
   TrainerScopedParams,
@@ -63,3 +65,14 @@ export const capturePokemonSchema = jsonBody({
 }) satisfies z.ZodType<Omit<CapturePokemonDTO, 'trainerId'>>;
 
 export type CapturePokemonInput = z.infer<typeof capturePokemonSchema>;
+
+export const updateTrainerRoleSchema = jsonBody({
+  role: z.enum(TrainerRole, {
+    error: (issue) =>
+      issue.input === undefined
+        ? 'O campo role é obrigatório'
+        : `O campo role deve ser um dos valores: ${Object.values(TrainerRole).join(', ')}`,
+  }),
+}) satisfies z.ZodType<Pick<UpdateTrainerRoleDTO, 'role'>>;
+
+export type UpdateTrainerRoleInput = z.infer<typeof updateTrainerRoleSchema>;

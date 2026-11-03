@@ -1,11 +1,15 @@
 import { Router } from 'express';
 import { makeTrainerController } from '@main/factories/make-trainer-controller';
 import { validateRequest } from '@infrastructure/http/middlewares/validate-request';
+import { ensureRole } from '@infrastructure/http/middlewares/ensure-role';
+import { ensureAuthenticated } from '@main/factories/middlewares';
+import { TrainerRole } from '@domain/entities/trainer-role';
 import {
   capturePokemonSchema,
   createTrainerSchema,
   trainerIdParamsSchema,
   trainerScopedParamsSchema,
+  updateTrainerRoleSchema,
 } from '@infrastructure/http/schemas/trainer-schemas';
 
 const router = Router();
@@ -127,6 +131,50 @@ router.post(
       }
     */
     return controller.capture(req, res);
+  },
+);
+
+router.patch(
+  '/api/v1/trainers/:id/role',
+  ensureAuthenticated,
+  ensureRole([TrainerRole.ADMIN]),
+  validateRequest({
+    params: trainerIdParamsSchema,
+    body: updateTrainerRoleSchema,
+  }),
+  (req, res) => {
+    /*
+      #swagger.tags = ['Trainers']
+      #swagger.summary = 'Altera o papel de um Treinador'
+      #swagger.description = 'Exclusivo para ADMIN. Um administrador não pode alterar o próprio papel. O novo papel só vale nos tokens emitidos após a alteração.'
+      #swagger.security = [{ "bearerAuth": [] }]
+      #swagger.parameters['id'] = { description: 'ID (UUID) do Treinador' }
+      #swagger.requestBody = {
+        required: true,
+        content: { 'application/json': { schema: { $ref: '#/definitions/UpdateTrainerRoleDto' } } }
+      }
+      #swagger.responses[200] = {
+        description: 'Papel atualizado com sucesso',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UpdatedTrainerRole' } } }
+      }
+      #swagger.responses[400] = {
+        description: 'ID ou papel inválido',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UpdateTrainerRoleValidationError' } } }
+      }
+      #swagger.responses[401] = {
+        description: 'Token ausente, inválido ou expirado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UnauthorizedError' } } }
+      }
+      #swagger.responses[403] = {
+        description: 'Requisição de quem não é ADMIN, ou tentativa de alterar o próprio papel',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ForbiddenError' } } }
+      }
+      #swagger.responses[404] = {
+        description: 'Treinador não encontrado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/TrainerNotFoundError' } } }
+      }
+    */
+    return controller.updateRole(req, res);
   },
 );
 

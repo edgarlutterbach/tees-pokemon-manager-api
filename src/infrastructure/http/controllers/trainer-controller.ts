@@ -3,7 +3,12 @@ import { CreateTrainerUseCase } from '@application/use-cases/create-trainer-use-
 import { DeleteTrainerUseCase } from '@application/use-cases/delete-trainer-use-case';
 import { ListTrainerTeamUseCase } from '@application/use-cases/list-trainer-team-use-case';
 import { CapturePokemonUseCase } from '@application/use-cases/capture-pokemon-use-case';
-import { CapturePokemonInput } from '@infrastructure/http/schemas/trainer-schemas';
+import { UpdateTrainerRoleUseCase } from '@application/use-cases/update-trainer-role-use-case';
+import { UnauthorizedError } from '@domain/errors/unauthorized-error';
+import {
+  CapturePokemonInput,
+  UpdateTrainerRoleInput,
+} from '@infrastructure/http/schemas/trainer-schemas';
 import { CreateTrainerDTO } from '@application/dtos/create-trainer-dto';
 
 export class TrainerController {
@@ -11,17 +16,20 @@ export class TrainerController {
   private deleteUseCase: DeleteTrainerUseCase;
   private listTeamUseCase: ListTrainerTeamUseCase;
   private captureUseCase: CapturePokemonUseCase;
+  private updateRoleUseCase: UpdateTrainerRoleUseCase;
 
   constructor(
     createUseCase: CreateTrainerUseCase,
     deleteUseCase: DeleteTrainerUseCase,
     listTeamUseCase: ListTrainerTeamUseCase,
     captureUseCase: CapturePokemonUseCase,
+    updateRoleUseCase: UpdateTrainerRoleUseCase,
   ) {
     this.createUseCase = createUseCase;
     this.deleteUseCase = deleteUseCase;
     this.listTeamUseCase = listTeamUseCase;
     this.captureUseCase = captureUseCase;
+    this.updateRoleUseCase = updateRoleUseCase;
   }
 
   async create(
@@ -59,6 +67,26 @@ export class TrainerController {
     return res.status(201).json({
       message: 'Pokémon capturado com sucesso!',
       data: pokemon,
+    });
+  }
+
+  async updateRole(req: Request, res: Response): Promise<Response> {
+    if (!req.user) {
+      throw new UnauthorizedError('Usuário não autenticado');
+    }
+
+    const trainerId = String(req.params.id);
+    const { role } = req.body as UpdateTrainerRoleInput;
+
+    const trainer = await this.updateRoleUseCase.execute({
+      trainerId,
+      role,
+      requesterId: req.user.id,
+    });
+
+    return res.status(200).json({
+      message: 'Papel do treinador atualizado com sucesso!',
+      data: trainer,
     });
   }
 }

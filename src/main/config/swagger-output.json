@@ -637,6 +637,93 @@
         }
       }
     },
+    "/api/v1/trainers/{id}/role": {
+      "patch": {
+        "tags": [
+          "Trainers"
+        ],
+        "summary": "Altera o papel de um Treinador",
+        "description": "Exclusivo para ADMIN. Um administrador não pode alterar o próprio papel. O novo papel só vale nos tokens emitidos após a alteração.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID (UUID) do Treinador"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Papel atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatedTrainerRole"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID ou papel inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTrainerRoleValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token ausente, inválido ou expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Requisição de quem não é ADMIN, ou tentativa de alterar o próprio papel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Treinador não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainerNotFoundError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTrainerRoleDto"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/pokedex/search": {
       "get": {
         "tags": [
@@ -1217,6 +1304,63 @@
                 "message": {
                   "type": "string",
                   "example": "O parâmetro id deve ser um UUID válido"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateTrainerRoleDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "example": "ADMIN"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "UpdatedTrainerRole": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Papel do treinador atualizado com sucesso!"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Trainer"
+          }
+        }
+      },
+      "UpdateTrainerRoleValidationError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Dados de entrada inválidos"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "example": "role"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "O campo role deve ser um dos valores: USER, ADMIN"
                 }
               }
             }
