@@ -82,6 +82,14 @@ export class InMemoryPokemonRepository implements PokemonRepositoryContract {
     }
   }
 
+  async releaseFromTrainer(id: string): Promise<void> {
+    const index = this.pokemons.findIndex((p) => p.id === id);
+
+    if (index !== -1) {
+      this.pokemons[index] = this.pokemons[index].release();
+    }
+  }
+
   async delete(id: string): Promise<void> {
     this.pokemons = this.pokemons.filter((p) => p.id !== id);
   }

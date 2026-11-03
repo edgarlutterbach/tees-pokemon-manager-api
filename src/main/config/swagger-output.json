@@ -407,6 +407,93 @@
         }
       }
     },
+    "/api/v1/pokemons/{id}/trainer": {
+      "delete": {
+        "tags": [
+          "Pokemons"
+        ],
+        "summary": "Solta um Pokémon, desfazendo o vínculo com o treinador",
+        "description": "O Pokémon continua no catálogo, sem treinador. USER só pode soltar os próprios Pokémons; ADMIN pode soltar qualquer um.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do Pokémon"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pokémon solto com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleasedPokemon"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID com mais de 50 caracteres",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonIdValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token ausente, inválido ou expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "USER tentando soltar um Pokémon que não lhe pertence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseForbiddenError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pokémon não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pokémon já está livre, sem treinador",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlreadyReleasedError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/v1/trainers/": {
       "post": {
         "tags": [
@@ -1240,6 +1327,52 @@
           "message": {
             "type": "string",
             "example": "Já existe um Pokémon cadastrado com este ID."
+          }
+        }
+      },
+      "ReleasedPokemon": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Pokémon solto com sucesso!"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Pokemon"
+          }
+        }
+      },
+      "ReleaseForbiddenError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 403
+          },
+          "message": {
+            "type": "string",
+            "example": "Você não tem permissão para alterar Pokémons de outro treinador"
+          }
+        }
+      },
+      "AlreadyReleasedError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 409
+          },
+          "message": {
+            "type": "string",
+            "example": "O Pokémon já está livre, sem treinador"
           }
         }
       },

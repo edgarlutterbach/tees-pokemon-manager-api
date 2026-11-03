@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { makePokemonController } from '@main/factories/make-pokemon-controller';
+import { ensureAuthenticated } from '@main/factories/middlewares';
 import { validateRequest } from '@infrastructure/http/middlewares/validate-request';
 import {
   createPokemonSchema,
@@ -191,6 +192,46 @@ router.delete(
       }
     */
     return controller.delete(req, res);
+  },
+);
+
+router.delete(
+  '/api/v1/pokemons/:id/trainer',
+  ensureAuthenticated,
+  validateRequest({ params: pokemonIdParamsSchema }),
+  (req, res) => {
+    /*
+      #swagger.tags = ['Pokemons']
+      #swagger.summary = 'Solta um Pokémon, desfazendo o vínculo com o treinador'
+      #swagger.description = 'O Pokémon continua no catálogo, sem treinador. USER só pode soltar os próprios Pokémons; ADMIN pode soltar qualquer um.'
+      #swagger.security = [{ "bearerAuth": [] }]
+      #swagger.parameters['id'] = { description: 'ID do Pokémon' }
+      #swagger.responses[200] = {
+        description: 'Pokémon solto com sucesso',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ReleasedPokemon' } } }
+      }
+      #swagger.responses[400] = {
+        description: 'ID com mais de 50 caracteres',
+        content: { 'application/json': { schema: { $ref: '#/definitions/PokemonIdValidationError' } } }
+      }
+      #swagger.responses[401] = {
+        description: 'Token ausente, inválido ou expirado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UnauthorizedError' } } }
+      }
+      #swagger.responses[403] = {
+        description: 'USER tentando soltar um Pokémon que não lhe pertence',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ReleaseForbiddenError' } } }
+      }
+      #swagger.responses[404] = {
+        description: 'Pokémon não encontrado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/NotFoundError' } } }
+      }
+      #swagger.responses[409] = {
+        description: 'Pokémon já está livre, sem treinador',
+        content: { 'application/json': { schema: { $ref: '#/definitions/AlreadyReleasedError' } } }
+      }
+    */
+    return controller.release(req, res);
   },
 );
 

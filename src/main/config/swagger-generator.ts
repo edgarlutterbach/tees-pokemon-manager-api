@@ -151,6 +151,21 @@ const doc = {
       statusCode: 409,
       message: 'Já existe um Pokémon cadastrado com este ID.',
     },
+    ReleasedPokemon: {
+      message: 'Pokémon solto com sucesso!',
+      data: { $ref: '#/definitions/Pokemon' },
+    },
+    ReleaseForbiddenError: {
+      status: 'error',
+      statusCode: 403,
+      message:
+        'Você não tem permissão para alterar Pokémons de outro treinador',
+    },
+    AlreadyReleasedError: {
+      status: 'error',
+      statusCode: 409,
+      message: 'O Pokémon já está livre, sem treinador',
+    },
     TrainerConflictError: {
       status: 'error',
       statusCode: 409,

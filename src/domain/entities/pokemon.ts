@@ -151,6 +151,25 @@ export class Pokemon {
     });
   }
 
+  release(): Pokemon {
+    return new Pokemon({
+      id: this._id,
+      name: this._name,
+      type: this._type,
+      rarity: this._rarity,
+      hp: this._hp,
+      attack: this._attack,
+      defense: this._defense,
+      nickname: this._nickname,
+      level: this._level,
+      trainerId: undefined,
+      spriteUrl: this._spriteUrl,
+      baseExperience: this._baseExperience,
+      height: this._height,
+      weight: this._weight,
+    });
+  }
+
   toJSON() {
     return {
       id: this._id,

@@ -1,6 +1,7 @@
 import { pokemonRepository } from './repositories';
 import { pokemonExternalGateway } from './gateways';
 import { ListPokemonsUseCase } from '@application/use-cases/list-pokemons-use-case';
+import { ReleasePokemonUseCase } from '@application/use-cases/release-pokemon-use-case';
 import { PokemonController } from '@infrastructure/http/controllers/pokemon-controller';
 import { GetPokemonByIdUseCase } from '@application/use-cases/get-pokemon-by-id-use-case';
 import { CreatePokemonUseCase } from '@application/use-cases/create-pokemon-use-case';
@@ -27,6 +28,7 @@ export function makePokemonController(): PokemonController {
   const searchByNameUseCase = new SearchPokemonsByNameUseCase(
     pokemonRepository,
   );
+  const releaseUseCase = new ReleasePokemonUseCase(pokemonRepository);
 
   const controller = new PokemonController(
     listUseCase,
@@ -37,6 +39,7 @@ export function makePokemonController(): PokemonController {
     statsUseCase,
     updateLevelUseCase,
     searchByNameUseCase,
+    releaseUseCase,
   );
 
   return controller;

@@ -7,6 +7,8 @@ import { DeletePokemonUseCase } from '@application/use-cases/delete-pokemon-use-
 import { GetPokemonStatsUseCase } from '@application/use-cases/get-pokemon-stats-use-case';
 import { UpdatePokemonLevelUseCase } from '@application/use-cases/update-pokemon-level-use-case';
 import { SearchPokemonsByNameUseCase } from '@application/use-cases/search-pokemons-by-name-use-case';
+import { ReleasePokemonUseCase } from '@application/use-cases/release-pokemon-use-case';
+import { UnauthorizedError } from '@domain/errors/unauthorized-error';
 import { ListPokemonQuery } from '@infrastructure/http/schemas/pokemon-schemas';
 import { UpdatePokemonLevelDTO } from '@application/dtos/update-pokemon-level-dto';
 
@@ -19,6 +21,7 @@ export class PokemonController {
   private statsUseCase: GetPokemonStatsUseCase;
   private updateLevelUseCase: UpdatePokemonLevelUseCase;
   private searchByNameUseCase: SearchPokemonsByNameUseCase;
+  private releaseUseCase: ReleasePokemonUseCase;
 
   constructor(
     listUseCase: ListPokemonsUseCase,
@@ -29,6 +32,7 @@ export class PokemonController {
     statsUseCase: GetPokemonStatsUseCase,
     updateLevelUseCase: UpdatePokemonLevelUseCase,
     searchByNameUseCase: SearchPokemonsByNameUseCase,
+    releaseUseCase: ReleasePokemonUseCase,
   ) {
     this.listUseCase = listUseCase;
     this.getByIdUseCase = getByIdUseCase;
@@ -38,6 +42,7 @@ export class PokemonController {
     this.statsUseCase = statsUseCase;
     this.updateLevelUseCase = updateLevelUseCase;
     this.searchByNameUseCase = searchByNameUseCase;
+    this.releaseUseCase = releaseUseCase;
   }
 
   async list(req: Request, res: Response): Promise<Response> {
@@ -79,6 +84,23 @@ export class PokemonController {
     await this.deleteUseCase.execute(id);
 
     return res.status(204).send();
+  }
+
+  async release(req: Request, res: Response): Promise<Response> {
+    if (!req.user) {
+      throw new UnauthorizedError('Usuário não autenticado');
+    }
+
+    const pokemon = await this.releaseUseCase.execute({
+      pokemonId: String(req.params.id),
+      currentUserId: req.user.id,
+      currentUserRole: req.user.role,
+    });
+
+    return res.status(200).json({
+      message: 'Pokémon solto com sucesso!',
+      data: pokemon,
+    });
   }
 
   async stats(req: Request, res: Response): Promise<Response> {

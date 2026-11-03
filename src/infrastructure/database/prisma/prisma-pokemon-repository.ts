@@ -101,6 +101,13 @@ export class PrismaPokemonRepository implements PokemonRepositoryContract {
     });
   }
 
+  async releaseFromTrainer(id: string): Promise<void> {
+    await prisma.pokemon.update({
+      where: { id },
+      data: { trainerId: null },
+    });
+  }
+
   async delete(id: string): Promise<void> {
     await prisma.pokemon.delete({ where: { id } });
   }
