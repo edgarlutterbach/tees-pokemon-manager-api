@@ -46,17 +46,28 @@ router.post(
 
 router.delete(
   '/api/v1/trainers/:id',
+  ensureAuthenticated,
+  ensureRole([TrainerRole.ADMIN]),
   validateRequest({ params: trainerIdParamsSchema }),
   (req, res) => {
     /*
       #swagger.tags = ['Trainers']
       #swagger.summary = 'Remove um Treinador'
       #swagger.description = 'Os Pokémons do treinador não são removidos: ficam sem treinador (selvagens).'
+      #swagger.security = [{ "bearerAuth": [] }]
       #swagger.parameters['id'] = { description: 'ID (UUID) do Treinador' }
       #swagger.responses[204] = { description: 'Treinador removido com sucesso' }
       #swagger.responses[400] = {
         description: 'ID em formato inválido',
         content: { 'application/json': { schema: { $ref: '#/definitions/TrainerIdValidationError' } } }
+      }
+      #swagger.responses[401] = {
+        description: 'Token ausente, inválido ou expirado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UnauthorizedError' } } }
+      }
+      #swagger.responses[403] = {
+        description: 'Exclusivo para ADMIN, ou tentativa de excluir a própria conta',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ForbiddenError' } } }
       }
       #swagger.responses[404] = {
         description: 'Treinador não encontrado',
@@ -95,6 +106,7 @@ router.get(
 
 router.post(
   '/api/v1/trainers/:trainerId/captures',
+  ensureAuthenticated,
   validateRequest({
     params: trainerScopedParamsSchema,
     body: capturePokemonSchema,
@@ -103,7 +115,8 @@ router.post(
     /*
       #swagger.tags = ['Trainers']
       #swagger.summary = 'Captura um Pokémon para o time do Treinador'
-      #swagger.description = 'Consulta a PokéAPI para obter tipo principal, atributos base, imagem e raridade. A raridade é LEGENDARY para lendários e míticos, RARE para capture_rate até 45 e COMMON nos demais casos. O time tem no máximo 6 Pokémons.'
+      #swagger.description = 'Consulta a PokéAPI para obter tipo principal, atributos base, imagem e raridade. A raridade é LEGENDARY para lendários e míticos, RARE para capture_rate até 45 e COMMON nos demais casos. O time tem no máximo 6 Pokémons. USER só captura para o próprio time; ADMIN pode capturar para qualquer treinador.'
+      #swagger.security = [{ "bearerAuth": [] }]
       #swagger.parameters['trainerId'] = { description: 'ID (UUID) do Treinador' }
       #swagger.requestBody = {
         required: true,
@@ -116,6 +129,14 @@ router.post(
       #swagger.responses[400] = {
         description: 'trainerId inválido ou corpo da requisição inválido',
         content: { 'application/json': { schema: { $ref: '#/definitions/CapturePokemonValidationError' } } }
+      }
+      #swagger.responses[401] = {
+        description: 'Token ausente, inválido ou expirado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UnauthorizedError' } } }
+      }
+      #swagger.responses[403] = {
+        description: 'USER tentando capturar para o time de outro treinador',
+        content: { 'application/json': { schema: { $ref: '#/definitions/CaptureForbiddenError' } } }
       }
       #swagger.responses[404] = {
         description: 'Treinador não encontrado ou nome inexistente na PokéAPI',

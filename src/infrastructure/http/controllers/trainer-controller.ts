@@ -45,8 +45,12 @@ export class TrainerController {
   }
 
   async delete(req: Request, res: Response): Promise<Response> {
+    if (!req.user) {
+      throw new UnauthorizedError('Usuário não autenticado');
+    }
+
     const id = String(req.params.id);
-    await this.deleteUseCase.execute(id);
+    await this.deleteUseCase.execute(id, req.user.id);
 
     return res.status(204).send();
   }
@@ -59,10 +63,20 @@ export class TrainerController {
   }
 
   async capture(req: Request, res: Response): Promise<Response> {
-    const trainerId = String(req.params.trainerId);
-    const body = req.body as CapturePokemonInput;
+    if (!req.user) {
+      throw new UnauthorizedError('Usuário não autenticado');
+    }
 
-    const pokemon = await this.captureUseCase.execute({ trainerId, ...body });
+    const trainerId = String(req.params.trainerId);
+    const { name, nickname } = req.body as CapturePokemonInput;
+
+    const pokemon = await this.captureUseCase.execute({
+      trainerId,
+      name,
+      nickname,
+      currentUserId: req.user.id,
+      currentUserRole: req.user.role,
+    });
 
     return res.status(201).json({
       message: 'Pokémon capturado com sucesso!',

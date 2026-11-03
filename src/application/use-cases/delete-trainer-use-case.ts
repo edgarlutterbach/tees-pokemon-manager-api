@@ -1,3 +1,4 @@
+import { ForbiddenError } from '@domain/errors/forbidden-error';
 import { TrainerRepositoryContract } from '@domain/repositories/trainer-repository-contract';
 
 export class DeleteTrainerUseCase {
@@ -7,7 +8,11 @@ export class DeleteTrainerUseCase {
     this.repository = repository;
   }
 
-  async execute(id: string): Promise<void> {
+  async execute(id: string, requesterId: string): Promise<void> {
+    if (id === requesterId) {
+      throw new ForbiddenError('Você não pode excluir a própria conta');
+    }
+
     await this.repository.delete(id);
   }
 }

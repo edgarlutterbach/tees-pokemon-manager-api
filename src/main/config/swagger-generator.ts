@@ -151,6 +151,12 @@ const doc = {
       statusCode: 409,
       message: 'Já existe um Pokémon cadastrado com este ID.',
     },
+    CaptureForbiddenError: {
+      status: 'error',
+      statusCode: 403,
+      message:
+        'Você não tem permissão para capturar Pokémons para outro treinador',
+    },
     ReleasedPokemon: {
       message: 'Pokémon solto com sucesso!',
       data: { $ref: '#/definitions/Pokemon' },

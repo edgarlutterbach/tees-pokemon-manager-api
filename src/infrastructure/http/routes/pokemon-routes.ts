@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { makePokemonController } from '@main/factories/make-pokemon-controller';
 import { ensureAuthenticated } from '@main/factories/middlewares';
 import { validateRequest } from '@infrastructure/http/middlewares/validate-request';
+import { ensureRole } from '@infrastructure/http/middlewares/ensure-role';
+import { TrainerRole } from '@domain/entities/trainer-role';
 import {
   createPokemonSchema,
   listPokemonsQuerySchema,
@@ -75,12 +77,15 @@ router.get(
 
 router.post(
   '/api/v1/pokemons/',
+  ensureAuthenticated,
+  ensureRole([TrainerRole.ADMIN]),
   validateRequest({ body: createPokemonSchema }),
   (req, res) => {
     /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Cadastra um novo Pokémon'
       #swagger.description = 'O nome é consultado na PokéAPI oficial, que fornece spriteUrl, baseExperience, height (decímetros) e weight (hectogramas). Esses quatro campos não são aceitos no corpo.'
+      #swagger.security = [{ "bearerAuth": [] }]
       #swagger.requestBody = {
         required: true,
         content: { 'application/json': { schema: { $ref: '#/definitions/CreatePokemonDto' } } }
@@ -92,6 +97,14 @@ router.post(
       #swagger.responses[400] = {
         description: 'Dados de entrada inválidos',
         content: { 'application/json': { schema: { $ref: '#/definitions/CreatePokemonValidationError' } } }
+      }
+      #swagger.responses[401] = {
+        description: 'Token ausente, inválido ou expirado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UnauthorizedError' } } }
+      }
+      #swagger.responses[403] = {
+        description: 'Exclusivo para ADMIN',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ForbiddenError' } } }
       }
       #swagger.responses[404] = {
         description: 'Nome não encontrado na base oficial da PokéAPI',
@@ -112,11 +125,14 @@ router.post(
 
 router.put(
   '/api/v1/pokemons/:id',
+  ensureAuthenticated,
+  ensureRole([TrainerRole.ADMIN]),
   validateRequest({ params: pokemonIdParamsSchema, body: updatePokemonSchema }),
   (req, res) => {
     /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Atualiza um Pokémon existente'
+      #swagger.security = [{ "bearerAuth": [] }]
       #swagger.parameters['id'] = { description: 'ID do Pokémon' }
       #swagger.requestBody = {
         required: true,
@@ -131,6 +147,14 @@ router.put(
         description: 'Dados de entrada inválidos ou corpo sem campos para atualizar',
         content: { 'application/json': { schema: { $ref: '#/definitions/UpdatePokemonValidationError' } } }
       }
+      #swagger.responses[401] = {
+        description: 'Token ausente, inválido ou expirado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UnauthorizedError' } } }
+      }
+      #swagger.responses[403] = {
+        description: 'Exclusivo para ADMIN',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ForbiddenError' } } }
+      }
       #swagger.responses[503] = {
         description: 'PokéAPI indisponível ou sem resposta em 3 segundos',
         content: { 'application/json': { schema: { $ref: '#/definitions/ServiceUnavailableError' } } }
@@ -142,6 +166,8 @@ router.put(
 
 router.patch(
   '/api/v1/pokemons/:id/level',
+  ensureAuthenticated,
+  ensureRole([TrainerRole.ADMIN]),
   validateRequest({
     params: pokemonIdParamsSchema,
     body: updatePokemonLevelSchema,
@@ -151,6 +177,7 @@ router.patch(
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Atualiza o nível de um Pokémon'
       #swagger.description = 'Altera apenas o nível do Pokémon. O valor deve ser um inteiro entre 1 e 100.'
+      #swagger.security = [{ "bearerAuth": [] }]
       #swagger.parameters['id'] = { description: 'ID do Pokémon' }
       #swagger.requestBody = {
         required: true,
@@ -164,6 +191,14 @@ router.patch(
         description: 'ID inválido, nível ausente, não inteiro ou fora do intervalo de 1 a 100',
         content: { 'application/json': { schema: { $ref: '#/definitions/UpdatePokemonLevelValidationError' } } }
       }
+      #swagger.responses[401] = {
+        description: 'Token ausente, inválido ou expirado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UnauthorizedError' } } }
+      }
+      #swagger.responses[403] = {
+        description: 'Exclusivo para ADMIN',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ForbiddenError' } } }
+      }
       #swagger.responses[404] = {
         description: 'Pokémon não encontrado',
         content: { 'application/json': { schema: { $ref: '#/definitions/NotFoundError' } } }
@@ -175,16 +210,27 @@ router.patch(
 
 router.delete(
   '/api/v1/pokemons/:id',
+  ensureAuthenticated,
+  ensureRole([TrainerRole.ADMIN]),
   validateRequest({ params: pokemonIdParamsSchema }),
   (req, res) => {
     /*
       #swagger.tags = ['Pokemons']
       #swagger.summary = 'Remove um Pokémon do catálogo'
+      #swagger.security = [{ "bearerAuth": [] }]
       #swagger.parameters['id'] = { description: 'ID do Pokémon' }
       #swagger.responses[204] = { description: 'Pokémon removido com sucesso' }
       #swagger.responses[400] = {
         description: 'ID com mais de 50 caracteres',
         content: { 'application/json': { schema: { $ref: '#/definitions/PokemonIdValidationError' } } }
+      }
+      #swagger.responses[401] = {
+        description: 'Token ausente, inválido ou expirado',
+        content: { 'application/json': { schema: { $ref: '#/definitions/UnauthorizedError' } } }
+      }
+      #swagger.responses[403] = {
+        description: 'Exclusivo para ADMIN',
+        content: { 'application/json': { schema: { $ref: '#/definitions/ForbiddenError' } } }
       }
       #swagger.responses[404] = {
         description: 'Pokémon não encontrado',

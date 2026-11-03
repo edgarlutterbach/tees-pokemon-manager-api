@@ -3,11 +3,13 @@ import { Pokemon } from '@domain/entities/pokemon';
 import { PokemonType } from '@domain/entities/pokemon-type';
 import { Trainer } from '@domain/entities/trainer';
 import { ConflictError } from '@domain/errors/conflict-error';
+import { ForbiddenError } from '@domain/errors/forbidden-error';
 import { NotFoundError } from '@domain/errors/not-found-error';
 import { PokemonExternalGateway } from '@domain/gateways/pokemon-external-gateway';
 import { PokemonRepositoryContract } from '@domain/repositories/pokemon-repository-contract';
 import { TrainerRepositoryContract } from '@domain/repositories/trainer-repository-contract';
 import { classifyPokemonRarity } from '@domain/services/classify-pokemon-rarity';
+import { canActOnTrainer } from '@domain/services/trainer-ownership-policy';
 import { CapturePokemonDTO } from '@application/dtos/capture-pokemon-dto';
 
 const POKEMON_TYPES: readonly string[] = Object.values(PokemonType);
@@ -31,7 +33,17 @@ export class CapturePokemonUseCase {
     trainerId,
     name,
     nickname,
+    currentUserId,
+    currentUserRole,
   }: CapturePokemonDTO): Promise<Pokemon> {
+    const requester = { id: currentUserId, role: currentUserRole };
+
+    if (!canActOnTrainer(requester, trainerId)) {
+      throw new ForbiddenError(
+        'Você não tem permissão para capturar Pokémons para outro treinador',
+      );
+    }
+
     const trainer = await this.trainerRepository.findById(trainerId);
 
     if (!trainer) {

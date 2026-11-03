@@ -62,7 +62,7 @@ export const capturePokemonSchema = jsonBody({
     .min(1, 'O apelido não pode ser vazio')
     .max(100, 'O apelido deve ter no máximo 100 caracteres')
     .optional(),
-}) satisfies z.ZodType<Omit<CapturePokemonDTO, 'trainerId'>>;
+}) satisfies z.ZodType<Pick<CapturePokemonDTO, 'name' | 'nickname'>>;
 
 export type CapturePokemonInput = z.infer<typeof capturePokemonSchema>;
 

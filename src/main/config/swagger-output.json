@@ -198,6 +198,26 @@
               }
             }
           },
+          "401": {
+            "description": "Token ausente, inválido ou expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para ADMIN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Pokémon não encontrado no catálogo ou novo nome inexistente na PokéAPI",
             "content": {
@@ -219,6 +239,11 @@
             }
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -261,6 +286,26 @@
               }
             }
           },
+          "401": {
+            "description": "Token ausente, inválido ou expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para ADMIN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Pokémon não encontrado",
             "content": {
@@ -271,7 +316,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/pokemons/": {
@@ -298,6 +348,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatePokemonValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token ausente, inválido ou expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para ADMIN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenError"
                 }
               }
             }
@@ -333,6 +403,11 @@
             }
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -384,6 +459,26 @@
               }
             }
           },
+          "401": {
+            "description": "Token ausente, inválido ou expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para ADMIN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Pokémon não encontrado",
             "content": {
@@ -395,6 +490,11 @@
             }
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -577,6 +677,26 @@
               }
             }
           },
+          "401": {
+            "description": "Token ausente, inválido ou expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para ADMIN, ou tentativa de excluir a própria conta",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Treinador não encontrado",
             "content": {
@@ -587,7 +707,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/trainers/{trainerId}/team": {
@@ -648,7 +773,7 @@
           "Trainers"
         ],
         "summary": "Captura um Pokémon para o time do Treinador",
-        "description": "Consulta a PokéAPI para obter tipo principal, atributos base, imagem e raridade. A raridade é LEGENDARY para lendários e míticos, RARE para capture_rate até 45 e COMMON nos demais casos. O time tem no máximo 6 Pokémons.",
+        "description": "Consulta a PokéAPI para obter tipo principal, atributos base, imagem e raridade. A raridade é LEGENDARY para lendários e míticos, RARE para capture_rate até 45 e COMMON nos demais casos. O time tem no máximo 6 Pokémons. USER só captura para o próprio time; ADMIN pode capturar para qualquer treinador.",
         "parameters": [
           {
             "name": "trainerId",
@@ -677,6 +802,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CapturePokemonValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token ausente, inválido ou expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "USER tentando capturar para o time de outro treinador",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureForbiddenError"
                 }
               }
             }
@@ -712,6 +857,11 @@
             }
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1327,6 +1477,23 @@
           "message": {
             "type": "string",
             "example": "Já existe um Pokémon cadastrado com este ID."
+          }
+        }
+      },
+      "CaptureForbiddenError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 403
+          },
+          "message": {
+            "type": "string",
+            "example": "Você não tem permissão para capturar Pokémons para outro treinador"
           }
         }
       },
